@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div class="header" th:fragment="header">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-md">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+        <a class="navbar-brand" href="#">세차매니아</a>
+        <div class="container-fluid">
+          <ul class="nav justify-content-end">
+            <li class="nav-item">
+              <a class="nav-link" href="#">커뮤니티</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">공지사항</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" id="login" href="#">로그인</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="signup" href="#">회원가입</a>
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-outline-warning" type="submit">Search</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
