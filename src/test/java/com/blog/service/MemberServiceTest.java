@@ -9,9 +9,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +29,7 @@ class MemberServiceTest {
     @Test
     public void join() throws Exception {
         // given
-        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add", "lat", "lon");
+        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add","city", "lat", "lon");
 
         // when
         memberService.join(request1);
@@ -41,15 +43,35 @@ class MemberServiceTest {
     }
 
     @Test
+    public void joinForCompany() throws Exception {
+        // given
+        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add","city", "lat", "lon");
+
+        // when
+        memberService.joinForCompany(request1);
+        em.flush();
+        em.clear();
+
+        Optional<Member> findMember = memberRepository.findByNickname("nick1");
+        Collection<? extends GrantedAuthority> authorities = findMember.get().getAuthorities();
+        for (GrantedAuthority authority : authorities) {
+            System.out.println("authority = " + authority);
+        }
+
+        // then
+        Assertions.assertThat(findMember.get().getEmail()).isEqualTo(request1.getEmail());
+    }
+
+    @Test
     public void duplicatedEmail() throws Exception {
         // given
-        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add", "lat", "lon");
+        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add", "city","lat", "lon");
 
         // when
         memberService.join(request1);
         em.flush();
         em.clear();
-        AddUserRequest request2 = new AddUserRequest("member1", "nick2", "pass", "add", "lat", "lon");
+        AddUserRequest request2 = new AddUserRequest("member1", "nick2", "pass", "add", "city","lat", "lon");
 
 
         //then
@@ -63,13 +85,13 @@ class MemberServiceTest {
     @Test
     public void duplicatedNickname() throws Exception {
         // given
-        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add", "lat", "lon");
+        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add","city", "lat", "lon");
 
         // when
         memberService.join(request1);
         em.flush();
         em.clear();
-        AddUserRequest request2 = new AddUserRequest("member2", "nick1", "pass", "add", "lat", "lon");
+        AddUserRequest request2 = new AddUserRequest("member2", "nick1", "pass", "add", "city","lat", "lon");
 
 
         //then

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="update-book-form">
+    <div class="mb-3">
+        <label for="img" class="form-label text-white">책 이미지</label>
+        <input class="form-control" type="file" id="img">
+    </div>
+
+    <button type="submit" id="submit-button" class="btn btn-light">등록</button>
+</form>
+
+<script>
+    const updateForm = document.getElementById('update-book-form');
+    if(updateForm){
+        /* 도서 수정 */
+        updateForm.addEventListener('submit',function (event){
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append("img",document.getElementById("img").files[0]);
+
+            function success(){
+                alert("도서 수정이 완료되었습니다.");
+                location.replace("/");
+            }
+            function fail(){
+                alert("도서 수정이 실패했습니다.");
+                location.replace("/");
+            }
+
+            httpRequestForImg("POST","/test",formData,success,fail);
+        });
+    } // updateForm end
+    function httpRequestForImg(method,url,body,success,fail){
+        fetch(url, {
+            method: method,
+            body: body,
+        }).then(response =>{
+            if(response.status ===200 || response.status ===201){
+                return success();
+            }else{
+                fail();
+            }
+
+        });
+    }
+</script>
+</body>
+</html>

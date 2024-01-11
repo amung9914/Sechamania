@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 public class Address {
 
     private String fullAddress;
+    private String city;
     private String lat;
     private String lon;
 
     @Builder
-    public Address(String fullAddress, String lat, String lon) {
+    public Address(String fullAddress, String city, String lat, String lon) {
         this.fullAddress = fullAddress;
+        this.city = city;
         this.lat = lat;
         this.lon = lon;
     }

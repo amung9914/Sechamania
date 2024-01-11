@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+// Article-Hashtag 다대다 풀어내는 엔티티
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

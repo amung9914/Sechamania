@@ -16,13 +16,14 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     private final UserDetailService userService;
+    private final String[] RESOURCE = {"/css/**","/js/**","/img/**","/tempImg/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/error","/").permitAll()
-                        .requestMatchers("/css/**","/js/**","/img/**").permitAll()
+                        .requestMatchers("/error","/","/test").permitAll()
+                        .requestMatchers(RESOURCE).permitAll()
                         .requestMatchers("/createBook").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

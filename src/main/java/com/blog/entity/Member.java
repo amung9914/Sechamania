@@ -34,6 +34,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
+    private String profileImg;
+
+
     @OneToMany(mappedBy = "member")
     @JsonIgnore
     private List<Authorities> authorities = new ArrayList<>();

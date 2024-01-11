@@ -23,8 +23,7 @@ public class MemberService {
 
     @Transactional
     public Long join(AddUserRequest dto){
-        validateDuplacateEmail(dto);
-        validateDuplicateNickname(dto);
+        validate(dto);
         Member newMember = Member.builder()
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword()))
@@ -40,6 +39,35 @@ public class MemberService {
         return newMember.getId();
     }
 
+    // 유효성 검사
+    private void validate(AddUserRequest dto) {
+        validateDuplacateEmail(dto);
+        validateDuplicateNickname(dto);
+    }
+
+    @Transactional
+    public Long joinForCompany(AddUserRequest dto){
+        validate(dto);
+        Member newMember = Member.builder()
+                .email(dto.getEmail())
+                .password(encoder.encode(dto.getPassword()))
+                .nickname(dto.getNickname())
+                .address(dto.getAddress())
+                .build();
+        memberRepository.save(newMember);
+
+        Authorities userAuth = new Authorities("USER");
+        authorityRepository.save(userAuth);
+        userAuth.makeRole(newMember);
+
+        Authorities companyAuth = new Authorities("COMPANY");
+        authorityRepository.save(companyAuth);
+        companyAuth.makeRole(newMember);
+
+        return newMember.getId();
+    }
+
+
     /**
      * 중복 가입 검증
      */
@@ -50,6 +78,9 @@ public class MemberService {
         }
     }
 
+    /**
+     * 닉네임 중복 검증
+     */
     private void validateDuplicateNickname(AddUserRequest dto){
         Optional<Member> findMember = memberRepository.findByNickname(dto.getNickname());
         if(findMember.isPresent()){

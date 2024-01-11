@@ -12,10 +12,10 @@ public class AddUserRequest {
     private Address address;
 
     @Builder
-    public AddUserRequest(String email, String nickname, String password, String fullAddress, String lat, String lon) {
+    public AddUserRequest(String email, String nickname, String password, String fullAddress, String city, String lat, String lon) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
-        this.address = new Address(fullAddress, lat, lon);
+        this.address = new Address(fullAddress,city, lat, lon);
     }
 }
