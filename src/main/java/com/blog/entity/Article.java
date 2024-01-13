@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Article extends BaseEntity{
@@ -28,11 +31,27 @@ public class Article extends BaseEntity{
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Builder
-    public Article(String title, String content, Member member, Category category) {
-        this.title = title;
-        this.content = content;
-        this.member = member;
-        this.category = category;
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ArticleImg> img = new ArrayList<>();
+
+    // 생성 메서드
+    public static Article createArticle(String title, String content, Member member, Category category, ArticleImg... articleImgs) {
+        Article article = new Article();
+        article.title = title;
+        article.content = content;
+        article.member = member;
+        article.category = category;
+        if(articleImgs!=null){
+            for (ArticleImg articleImg : articleImgs) {
+                article.addArticleImg(articleImg);
+            }
+        }
+        return article;
+    }
+
+    // 편의 관계 메서드
+    public void addArticleImg(ArticleImg articleImg){
+        img.add(articleImg);
+        articleImg.connectArticle(this);
     }
 }

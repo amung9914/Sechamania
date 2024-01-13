@@ -3,6 +3,7 @@ package com.blog.service;
 import com.blog.dto.AddUserRequest;
 import com.blog.entity.Authorities;
 import com.blog.entity.Member;
+import com.blog.entity.MemberStatus;
 import com.blog.repository.AuthorityRepository;
 import com.blog.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class MemberService {
                 .password(encoder.encode(dto.getPassword()))
                 .nickname(dto.getNickname())
                 .address(dto.getAddress())
+                .status(MemberStatus.ACTIVE)
                 .build();
         memberRepository.save(newMember);
 
@@ -53,6 +55,7 @@ public class MemberService {
                 .password(encoder.encode(dto.getPassword()))
                 .nickname(dto.getNickname())
                 .address(dto.getAddress())
+                .status(MemberStatus.ACTIVE)
                 .build();
         memberRepository.save(newMember);
 

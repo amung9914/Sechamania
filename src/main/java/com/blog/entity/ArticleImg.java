@@ -25,4 +25,9 @@ public class ArticleImg extends BaseEntity{
         this.path = path;
         this.article = article;
     }
+
+    // 아티클 연결
+    public void connectArticle(Article article){
+        this.article = article;
+    }
 }
