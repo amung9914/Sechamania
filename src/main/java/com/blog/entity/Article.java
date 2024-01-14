@@ -34,6 +34,15 @@ public class Article extends BaseEntity{
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArticleImg> img = new ArrayList<>();
 
+    @Builder
+    public Article(String title, String content, Member member, Category category, List<ArticleImg> img) {
+        this.title = title;
+        this.content = content;
+        this.member = member;
+        this.category = category;
+        this.img = img;
+    }
+
     // 생성 메서드
     public static Article createArticle(String title, String content, Member member, Category category, ArticleImg... articleImgs) {
         Article article = new Article();
