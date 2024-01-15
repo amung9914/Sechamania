@@ -1,17 +1,19 @@
 package com.blog.service;
 
 import com.blog.dto.AddArticleDto;
+import com.blog.dto.ArticleListDto;
+import com.blog.dto.CommentResponse;
 import com.blog.entity.*;
 import com.blog.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,6 +25,7 @@ public class ArticleService {
     private final MemberRepository memberRepository;
     private final HashtagRepository hashtagRepository;
     private final ArticleHashtagRepository articleHashtagRepository;
+
 
     @Transactional
     public Long save(String email, AddArticleDto dto){
@@ -77,7 +80,7 @@ public class ArticleService {
                 .orElseThrow(()-> new IllegalArgumentException("not found:" + dto.getCategoryId()));
 
         ArticleHashtag[] hashtagArr = new ArticleHashtag[hashtags.length];
-        saveHashtag(hashtags);
+        saveHashtags(hashtags);
         for (int i = 0; i < hashtags.length; i++) {
             Hashtag findtag = hashtagRepository.findByname(hashtags[i])
                     .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 hashtag"));
@@ -97,7 +100,7 @@ public class ArticleService {
                 .orElseThrow(()-> new IllegalArgumentException("not found:" + dto.getCategoryId()));
 
         ArticleHashtag[] hashtagArr = new ArticleHashtag[hashtags.length];
-        saveHashtag(hashtags);
+        saveHashtags(hashtags);
         for (int i = 0; i < hashtags.length; i++) {
             Hashtag findtag = hashtagRepository.findByname(hashtags[i])
                     .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 hashtag"));
@@ -119,7 +122,7 @@ public class ArticleService {
     }
 
 
-    private void saveHashtag(String[] hashtags) {
+    private void saveHashtags(String[] hashtags) {
         for (String hashtag : hashtags) {
             Optional<Hashtag> tag = hashtagRepository.findByname(hashtag);
             if(tag.isEmpty()){
@@ -127,11 +130,74 @@ public class ArticleService {
             }
         }
     }
+
+    private void saveHashtag(String hashtag) {
+        Optional<Hashtag> tag = hashtagRepository.findByname(hashtag);
+            if(tag.isEmpty()){
+                hashtagRepository.save(new Hashtag(hashtag));
+            }
+    }
     public List<Article> findAll(){
-        return articleRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
+        return articleRepository.findAll();
+    }
+
+    public Page<ArticleListDto> findAllWithPage(){
+        PageRequest pageRequest = PageRequest.of(0,10, Sort.by(Sort.Direction.DESC,"id"));
+        Page<Article> articles = articleRepository.findPage(pageRequest);
+         return articles.map(article ->
+                new ArticleListDto(article.getId(), article.getTitle(), article.getMember().getNickname(),article.getCreatedDate()));
     }
 
     public Article findById(long id){
         return articleRepository.findArticleByArticleId(id);
+    }
+
+    /**
+     * SPRING SECURITY로 본인인지 권한확인 기능 추가 해주세요
+     */
+    public void update(long id, AddArticleDto dto, String[] hashtags,String... imgPaths){
+        Article article = articleRepository.findArticleByArticleId(id);
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(()-> new IllegalArgumentException("not found:" + dto.getCategoryId()));
+
+        // 해시태그 수정 시작
+        Set<String> newHashtags = new HashSet<>((hashtags != null) ? new HashSet<>(Arrays.asList(hashtags)) : Collections.emptySet());
+        Set<String> existingHashtags = article.getArticleHashtags().stream()
+                .map(articleHashtag -> articleHashtag.getHashtag().getName())
+                .collect(Collectors.toSet());
+
+        for (String existingHashtag : existingHashtags) {
+            if(!newHashtags.contains(existingHashtag)){
+                articleHashtagRepository.deleteByArticleAndHashtagName(article,existingHashtag);
+            }
+        }
+
+        newHashtags.removeAll(existingHashtags);
+        newHashtags.forEach(hashtag -> {
+            saveHashtag(hashtag);
+            Hashtag newHashtag = hashtagRepository.findByname(hashtag)
+                    .orElseThrow(()-> new IllegalArgumentException("newHashtag 저장실패"));
+            ArticleHashtag articleHashtag = ArticleHashtag.builder().article(article)
+                    .hashtag(newHashtag)
+                    .build();
+            articleHashtagRepository.save(articleHashtag);
+        });
+        // 해시태그 수정 end
+
+        // 이미지 수정 시작
+        if(imgPaths!=null){
+            ArticleImg[] imgs = new ArticleImg[imgPaths.length];
+
+            for (int i = 0; i < imgs.length; i++) {
+                ArticleImg articleImg = ArticleImg.builder().path(imgPaths[i]).build();
+                imgs[i] = articleImg;
+            }
+            article.changeImg(imgs);
+        }else{
+            article.getImg().clear();
+        }
+
+        article.update(dto.getTitle(),dto.getContent(),category);
+        articleRepository.save(article);
     }
 }

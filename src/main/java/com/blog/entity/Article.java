@@ -109,4 +109,17 @@ public class Article extends BaseEntity{
         articleHashtags.add(articleHashtag);
         articleHashtag.addArticle(this);
     }
+
+    public void update(String title, String content,Category category){
+        this.title = title;
+        this.content = content;
+        this.category = category;
+    }
+
+    public void changeImg(ArticleImg... articleImgs){
+        this.img.clear();
+        for (ArticleImg articleImg : articleImgs) {
+            this.addArticleImg(articleImg);
+        }
+    }
 }

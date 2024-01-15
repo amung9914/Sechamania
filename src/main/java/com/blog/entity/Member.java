@@ -37,7 +37,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private String profileImg;
 
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Authorities> authorities = new ArrayList<>();
 
