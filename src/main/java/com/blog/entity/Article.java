@@ -1,5 +1,6 @@
 package com.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,18 +33,38 @@ public class Article extends BaseEntity{
     private Category category;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ArticleImg> img = new ArrayList<>();
 
+    @OneToMany(mappedBy = "article")
+    @JsonIgnore
+    private List<ArticleHashtag> articleHashtags = new ArrayList<>();
+
     @Builder
-    public Article(String title, String content, Member member, Category category, List<ArticleImg> img) {
+    public Article(String title, String content, Member member, Category category, List<ArticleImg> img, List<ArticleHashtag> articleHashtags) {
         this.title = title;
         this.content = content;
         this.member = member;
         this.category = category;
         this.img = img;
+        this.articleHashtags = articleHashtags;
     }
 
     // 생성 메서드
+    public static Article createArticleWtihHashtags(String title, String content, Member member, Category category, ArticleHashtag... hashtags) {
+        Article article = new Article();
+        article.title = title;
+        article.content = content;
+        article.member = member;
+        article.category = category;
+        if(hashtags!=null){
+            for (ArticleHashtag hashtag : hashtags) {
+                article.addHashtag(hashtag);
+            }
+        }
+        return article;
+    }
+
     public static Article createArticle(String title, String content, Member member, Category category, ArticleImg... articleImgs) {
         Article article = new Article();
         article.title = title;
@@ -58,9 +79,34 @@ public class Article extends BaseEntity{
         return article;
     }
 
+    public static Article createArticleWithImgAndHashtags(String title, String content, Member member, Category category,
+                                                          ArticleHashtag[] hashtags, ArticleImg... articleImgs) {
+        Article article = new Article();
+        article.title = title;
+        article.content = content;
+        article.member = member;
+        article.category = category;
+        if(hashtags!=null){
+            for (ArticleHashtag hashtag : hashtags) {
+                article.addHashtag(hashtag);
+            }
+        }
+        if(articleImgs!=null){
+            for (ArticleImg articleImg : articleImgs) {
+                article.addArticleImg(articleImg);
+            }
+        }
+        return article;
+    }
+
     // 편의 관계 메서드
     public void addArticleImg(ArticleImg articleImg){
         img.add(articleImg);
         articleImg.connectArticle(this);
+    }
+
+    public void addHashtag(ArticleHashtag articleHashtag){
+        articleHashtags.add(articleHashtag);
+        articleHashtag.addArticle(this);
     }
 }

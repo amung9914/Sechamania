@@ -2,6 +2,7 @@ package com.blog.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,4 +21,9 @@ public class Bookmark extends BaseEntity{
     @JoinColumn(name = "article_id")
     private Article article;
 
+    @Builder
+    public Bookmark(Member member, Article article) {
+        this.member = member;
+        this.article = article;
+    }
 }

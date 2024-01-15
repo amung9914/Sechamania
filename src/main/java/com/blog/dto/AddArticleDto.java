@@ -7,9 +7,9 @@ public class AddArticleDto {
 
     private String title;
     private String content;
-    private Long categoryId;
+    private long categoryId;
 
-    public AddArticleDto(String title, String content, Long categoryId) {
+    public AddArticleDto(String title, String content, long categoryId) {
         this.title = title;
         this.content = content;
         this.categoryId = categoryId;

@@ -27,7 +27,6 @@ class ArticleRepositoryTest {
     EntityManager em;
 
     @Test
-    @Rollback(value = false)
     public void articleTest() throws Exception {
         // given
         Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
@@ -37,7 +36,6 @@ class ArticleRepositoryTest {
         ArticleImg articleImg = ArticleImg.builder()
                 .path("path")
                 .build();
-
 
         // when
         Article newArticle = Article.createArticle("title","content",member,null,articleImg);

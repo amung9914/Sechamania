@@ -1,18 +1,15 @@
 package com.blog.service;
 
 import com.blog.dto.AddArticleDto;
-import com.blog.entity.Article;
-import com.blog.entity.ArticleImg;
-import com.blog.entity.Category;
-import com.blog.entity.Member;
-import com.blog.repository.ArticleRepository;
-import com.blog.repository.CategoryRepository;
-import com.blog.repository.MemberRepository;
+import com.blog.entity.*;
+import com.blog.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +21,8 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final CategoryRepository categoryRepository;
     private final MemberRepository memberRepository;
+    private final HashtagRepository hashtagRepository;
+    private final ArticleHashtagRepository articleHashtagRepository;
 
     @Transactional
     public Long save(String email, AddArticleDto dto){
@@ -69,8 +68,70 @@ public class ArticleService {
         return articleRepository.save(newArticle).getId();
     }
 
+    @Transactional
+    public void saveWithHashtag(String email, AddArticleDto dto, String[] hashtags){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
 
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(()-> new IllegalArgumentException("not found:" + dto.getCategoryId()));
+
+        ArticleHashtag[] hashtagArr = new ArticleHashtag[hashtags.length];
+        saveHashtag(hashtags);
+        for (int i = 0; i < hashtags.length; i++) {
+            Hashtag findtag = hashtagRepository.findByname(hashtags[i])
+                    .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 hashtag"));
+            hashtagArr[i] = ArticleHashtag.builder().hashtag(findtag).build();
+        }
+        Article newArticle = Article.createArticleWtihHashtags(dto.getTitle(), dto.getContent(), member, category, hashtagArr);
+        articleRepository.save(newArticle);
+        articleHashtagRepository.saveAll(Arrays.asList(hashtagArr));
+    }
+
+    @Transactional
+    public void saveArticleWithHashtagAndImg(String email, AddArticleDto dto, String[] hashtags,String... imgPaths){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
+
+        Category category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(()-> new IllegalArgumentException("not found:" + dto.getCategoryId()));
+
+        ArticleHashtag[] hashtagArr = new ArticleHashtag[hashtags.length];
+        saveHashtag(hashtags);
+        for (int i = 0; i < hashtags.length; i++) {
+            Hashtag findtag = hashtagRepository.findByname(hashtags[i])
+                    .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 hashtag"));
+            hashtagArr[i] = ArticleHashtag.builder().hashtag(findtag).build();
+        }
+
+        ArticleImg[] imgArr = new ArticleImg[imgPaths.length];
+
+        for (int i = 0; i < imgPaths.length; i++) {
+            ArticleImg articleImg = ArticleImg.builder()
+                    .path(imgPaths[i])
+                    .build();
+            imgArr[i] = articleImg;
+        }
+
+        Article newArticle = Article.createArticleWithImgAndHashtags(dto.getTitle(), dto.getContent(), member, category, hashtagArr,imgArr);
+        articleRepository.save(newArticle);
+        articleHashtagRepository.saveAll(Arrays.asList(hashtagArr));
+    }
+
+
+    private void saveHashtag(String[] hashtags) {
+        for (String hashtag : hashtags) {
+            Optional<Hashtag> tag = hashtagRepository.findByname(hashtag);
+            if(tag.isEmpty()){
+                hashtagRepository.save(new Hashtag(hashtag));
+            }
+        }
+    }
     public List<Article> findAll(){
         return articleRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
+    }
+
+    public Article findById(long id){
+        return articleRepository.findArticleByArticleId(id);
     }
 }

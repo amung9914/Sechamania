@@ -25,7 +25,6 @@ class ArticleServiceTest {
     EntityManager em;
 
     @Test
-    @Rollback(value = false)
     public void save() throws Exception {
         // given
         Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
@@ -47,7 +46,6 @@ class ArticleServiceTest {
     }
 
     @Test
-    @Rollback(value = false)
     public void saveWithImg() throws Exception {
         // given
         Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
@@ -70,6 +68,65 @@ class ArticleServiceTest {
 
         // then
         Assertions.assertThat(list.get(0).getTitle()).isEqualTo("title1");
+    }
+
+    @Test
+    public void saveWithHashtags() throws Exception {
+        // given
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+
+        memberRepository.save(member);
+        Category category = new Category("name1");
+        categoryService.save(category);
+
+        AddArticleDto addArticleDto = new AddArticleDto("title1", "content1", category.getId());
+
+        // String arr = "img1";
+        String[] arr = {"hash1","hash2","hash3"};
+
+        // when
+        articleService.saveWithHashtag("member1",addArticleDto,arr);
+        em.flush();
+        em.clear();
+
+        List<Article> list = articleService.findAll();
+
+        // then
+        Assertions.assertThat(list.get(0).getTitle()).isEqualTo("title1");
+    }
+
+    @Test
+    @Rollback(value = false)
+    public void saveWithHashtagsAndImgs() throws Exception {
+        // given
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+
+        memberRepository.save(member);
+        Category category = new Category("name1");
+        categoryService.save(category);
+
+        AddArticleDto addArticleDto = new AddArticleDto("title1", "content1", category.getId());
+
+        // String arr = "img1";
+        String[] arr = {"hash1","hash2","hash3"};
+        String[] arr2 = {"img1","img2","img3"};
+
+        // when
+        articleService.saveArticleWithHashtagAndImg("member1",addArticleDto,arr,arr2);
+        em.flush();
+        em.clear();
+
+        List<Article> list = articleService.findAll();
+        System.out.println("*************************************");
+        Article findArticle = articleService.findById(list.get(0).getId());
+        // then
+        System.out.println("findArticle = " + findArticle.getTitle());
+        for (ArticleHashtag articleHashtag : findArticle.getArticleHashtags()) {
+            System.out.println("Hashtag = " + articleHashtag.getHashtag().getName());
+        }
+        for (ArticleImg articleImg : findArticle.getImg()) {
+            System.out.println("articleImg = " + articleImg.getPath());
+        }
     }
 
 }

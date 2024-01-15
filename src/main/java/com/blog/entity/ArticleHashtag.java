@@ -28,4 +28,8 @@ public class ArticleHashtag extends BaseTimeEntity{
         this.article = article;
         this.hashtag = hashtag;
     }
+
+    public void addArticle(Article article){
+        this.article = article;
+    }
 }
