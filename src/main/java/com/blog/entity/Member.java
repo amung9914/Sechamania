@@ -33,21 +33,21 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private Address address;
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
-
     private String profileImg;
-
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Authorities> authorities = new ArrayList<>();
 
     @Builder
-    public Member(String email, String password, String nickname, Address address, MemberStatus status) {
+    public Member(String email, String password, String nickname, Address address, MemberStatus status, String imgPath) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.address = address;
         this.status = status;
+        profileImg = imgPath;
+
     }
 
     /**

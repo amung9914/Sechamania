@@ -32,7 +32,7 @@ class MemberServiceTest {
         AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add","city", "lat", "lon");
 
         // when
-        memberService.join(request1);
+        memberService.join(request1,"default");
         em.flush();
         em.clear();
 
@@ -40,6 +40,7 @@ class MemberServiceTest {
 
         // then
         Assertions.assertThat(findMember.get().getEmail()).isEqualTo(request1.getEmail());
+        System.out.println("findMember.get().getProfileImg() = " + findMember.get().getProfileImg());
     }
 
     @Test
@@ -48,7 +49,7 @@ class MemberServiceTest {
         AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add","city", "lat", "lon");
 
         // when
-        memberService.joinForCompany(request1);
+        memberService.joinForCompany(request1,null);
         em.flush();
         em.clear();
 
@@ -68,7 +69,7 @@ class MemberServiceTest {
         AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add", "city","lat", "lon");
 
         // when
-        memberService.join(request1);
+        memberService.join(request1,null);
         em.flush();
         em.clear();
         AddUserRequest request2 = new AddUserRequest("member1", "nick2", "pass", "add", "city","lat", "lon");
@@ -76,7 +77,7 @@ class MemberServiceTest {
 
         //then
         assertThrows(IllegalStateException.class, () ->{
-            memberService.join(request2);
+            memberService.join(request2,null);
         });
 
 
@@ -88,7 +89,7 @@ class MemberServiceTest {
         AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add","city", "lat", "lon");
 
         // when
-        memberService.join(request1);
+        memberService.join(request1,null);
         em.flush();
         em.clear();
         AddUserRequest request2 = new AddUserRequest("member2", "nick1", "pass", "add", "city","lat", "lon");
@@ -96,7 +97,7 @@ class MemberServiceTest {
 
         //then
         assertThrows(IllegalStateException.class, () ->{
-            memberService.join(request2);
+            memberService.join(request2,null);
         });
 
     }

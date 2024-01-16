@@ -29,7 +29,7 @@ class ArticleRepositoryTest {
     @Test
     public void articleTest() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
 

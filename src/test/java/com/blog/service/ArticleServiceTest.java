@@ -35,7 +35,7 @@ class ArticleServiceTest {
     @Test
     public void save() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
         Category category = new Category("name1");
@@ -56,7 +56,7 @@ class ArticleServiceTest {
     @Test
     public void saveWithImg() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
         Category category = new Category("name1");
@@ -81,7 +81,7 @@ class ArticleServiceTest {
     @Test
     public void saveWithHashtags() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
         Category category = new Category("name1");
@@ -106,7 +106,7 @@ class ArticleServiceTest {
     @Test
     public void saveWithHashtagsAndImgs() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
         Category category = new Category("name1");
@@ -139,7 +139,7 @@ class ArticleServiceTest {
     @Test
     public void update() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
         Category category = new Category("name1");
@@ -162,6 +162,7 @@ class ArticleServiceTest {
         String[] newHash = {"hash1","hash2","hash31","hash41"};
         String[] arr3 = {"img31","img32"};
 
+
         articleService.update(list.get(0).getId(),newDto,null,null);
         em.flush();
         em.clear();
@@ -173,7 +174,7 @@ class ArticleServiceTest {
     @Test
     public void findAllByPage() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
         Category category = new Category("name1");

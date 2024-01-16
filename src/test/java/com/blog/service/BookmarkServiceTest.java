@@ -38,7 +38,7 @@ class BookmarkServiceTest {
     @Test
     public void save() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
         Category category = new Category("name1");
@@ -66,7 +66,7 @@ class BookmarkServiceTest {
     @Test
     public void booleanTest() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
         Category category = new Category("name1");
@@ -93,7 +93,7 @@ class BookmarkServiceTest {
     @Test
     public void delete() throws Exception {
         // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE);
+        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
 
         memberRepository.save(member);
         Category category = new Category("name1");

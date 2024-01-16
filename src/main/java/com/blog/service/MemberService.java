@@ -23,7 +23,7 @@ public class MemberService {
     private final BCryptPasswordEncoder encoder;
 
     @Transactional
-    public Long join(AddUserRequest dto){
+    public Long join(AddUserRequest dto,String imgPath){
         validate(dto);
         Member newMember = Member.builder()
                 .email(dto.getEmail())
@@ -31,6 +31,7 @@ public class MemberService {
                 .nickname(dto.getNickname())
                 .address(dto.getAddress())
                 .status(MemberStatus.ACTIVE)
+                .imgPath(imgPath==null?"/img/defaultProfile.jpg":imgPath)
                 .build();
         memberRepository.save(newMember);
 
@@ -48,7 +49,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Long joinForCompany(AddUserRequest dto){
+    public Long joinForCompany(AddUserRequest dto,String imgPath){
         validate(dto);
         Member newMember = Member.builder()
                 .email(dto.getEmail())
@@ -56,6 +57,7 @@ public class MemberService {
                 .nickname(dto.getNickname())
                 .address(dto.getAddress())
                 .status(MemberStatus.ACTIVE)
+                .imgPath(imgPath==null?"/img/defaultProfile.jpg":imgPath)
                 .build();
         memberRepository.save(newMember);
 
