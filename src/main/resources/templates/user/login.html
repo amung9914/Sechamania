@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<div layout:fragment="script">
+    <script th:src="@{/js/login.js}"></script>
+</div>
+<div layout:fragment="css">
+    <link th:href="@{/css/login.css}" rel="stylesheet">
+</div>
+<div layout:fragment="content">
+    <div class="center">
+        <div class="w-25 p-3">
+            <div class="logo">
+                <h2>세차매니아</h2>
+            </div>
+            <div class="loginForm">
+                <form action="/login" method="POST" id="login_form">
+                <div>
+                    <input type="text" class="form-control" id="email" name="username" placeholder="이메일 주소">
+                </div>
+                <div id="email_check"><br></div>
+                <div>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="비밀번호">
+                </div>
+                    <p class="notice" th:text="${loginErrorMsg}"></p>
+                    <button type="submit" class="btn btn-warning" id="loginBtn">로그인</button>
+                </form>
+            </div>
+            <div class="divider">
+                <span class="line">또는</span>
+            </div>
+            <div class="other">
+                <a href="/oauth2/authorization/google">
+                    <img src="/img/googleSI.png" class="google">
+                </a>
+                <a href="#">계정 만들기</a>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

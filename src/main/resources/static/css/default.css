@@ -1,0 +1,22 @@
+.header{
+    border-bottom: 1px solid #eeeeee;
+}
+.nav a{
+    margin: 15px 5px;
+    color: black;
+    font-size: 16px;
+}
+.nav button{
+    margin: 15px 5px;
+    font-size: large;
+}
+
+.navbar.navbar-expand-lg{
+    padding: 15px 15%;
+}
+*{
+    font-family: 'IBM Plex Sans KR', sans-serif;
+}
+a{
+    color: black;
+}

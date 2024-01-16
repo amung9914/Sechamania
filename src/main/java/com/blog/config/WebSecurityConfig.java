@@ -22,13 +22,14 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/error","/","/test").permitAll()
+                        .requestMatchers("/error","/","/test","/login","/login/**").permitAll()
                         .requestMatchers(RESOURCE).permitAll()
                         .requestMatchers("/createBook").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/login")
+                        .failureUrl("/login/error")
                         .defaultSuccessUrl("/")
                 )
                 .logout(logout -> logout

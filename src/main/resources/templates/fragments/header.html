@@ -24,6 +24,11 @@
             <li class="nav-item">
               <a class="nav-link" id="signup" href="#">회원가입</a>
             </li>
+            <th:block sec:authorize="isAuthenticated()">
+              <li class="nav-item">
+                <a class="nav-link" th:href="@{/logout}">로그아웃</a>
+              </li>
+            </th:block>
             <li class="nav-item">
               <button class="btn btn-outline-warning" type="submit">Search</button>
             </li>

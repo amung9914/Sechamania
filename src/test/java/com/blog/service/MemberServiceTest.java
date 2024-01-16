@@ -27,16 +27,17 @@ class MemberServiceTest {
     EntityManager em;
 
     @Test
+    @Rollback(value = false)
     public void join() throws Exception {
         // given
-        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add","city", "lat", "lon");
+        AddUserRequest request1 = new AddUserRequest("admin@admin.com", "admin", "1234", "add","city", "lat", "lon");
 
         // when
         memberService.join(request1,"default");
         em.flush();
         em.clear();
 
-        Optional<Member> findMember = memberRepository.findByNickname("nick1");
+        Optional<Member> findMember = memberRepository.findByEmail("admin@admin.com");
 
         // then
         Assertions.assertThat(findMember.get().getEmail()).isEqualTo(request1.getEmail());

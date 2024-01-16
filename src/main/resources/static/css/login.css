@@ -1,0 +1,54 @@
+.center{
+    text-align: -webkit-center;
+}
+.logo{
+    margin: 40px;
+}
+.loginForm{
+    margin-bottom: 20px;
+}
+.notice{
+    color:orange;
+}
+
+button {
+    width: -webkit-fill-available;
+}
+
+.divider {
+    position: relative;
+    margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    width: calc(50% - 5px);
+    height: 1px;
+    background-color: lightgray;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.divider::before {
+    right: 10px;
+}
+
+.divider::after {
+    left: 10px;
+}
+
+.line {
+    position: relative;
+    z-index: 2;
+    background-color: white;
+    padding: 0 10px;
+}
+.google{
+    height: 50px;
+    margin: 10px;
+}
+.other{
+    display: grid;
+}
