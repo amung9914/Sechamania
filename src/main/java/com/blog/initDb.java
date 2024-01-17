@@ -1,4 +1,3 @@
-/*
 package com.blog;
 
 import com.blog.entity.Address;
@@ -38,7 +37,7 @@ public class initDb {
                     .nickname("admin")
                     .address(new Address("fulladdr","city","lat","lon"))
                     .status(MemberStatus.ACTIVE)
-                    .imgPath("/img/defaultProfile.jpg")
+                    .imgPath("img/defaultProfile.jpg")
                     .build();
             memberRepository.save(newMember);
 
@@ -58,4 +57,3 @@ public class initDb {
 }
 
 
- */

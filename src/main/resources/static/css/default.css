@@ -1,5 +1,7 @@
-.header{
+.navbar{
     border-bottom: 1px solid #eeeeee;
+    background-color: white;
+    z-index: 1000;
 }
 .nav a{
     margin: 15px 5px;
@@ -19,4 +21,7 @@
 }
 a{
     color: black;
+}
+.content{
+    margin-top:110px;
 }

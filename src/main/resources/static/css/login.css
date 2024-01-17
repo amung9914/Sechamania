@@ -10,8 +10,11 @@
 .notice{
     color:orange;
 }
+#password{
+    margin-bottom: 20px;
+}
 
-button {
+#loginBtn {
     width: -webkit-fill-available;
 }
 

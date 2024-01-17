@@ -24,7 +24,6 @@ public class MemberService {
 
     @Transactional
     public Long join(AddUserRequest dto,String imgPath){
-        validate(dto);
         Member newMember = Member.builder()
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword()))
@@ -42,15 +41,8 @@ public class MemberService {
         return newMember.getId();
     }
 
-    // 유효성 검사
-    private void validate(AddUserRequest dto) {
-        validateDuplacateEmail(dto);
-        validateDuplicateNickname(dto);
-    }
-
     @Transactional
     public Long joinForCompany(AddUserRequest dto,String imgPath){
-        validate(dto);
         Member newMember = Member.builder()
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword()))
@@ -76,8 +68,8 @@ public class MemberService {
     /**
      * 중복 가입 검증
      */
-    private void validateDuplacateEmail(AddUserRequest dto){
-        Optional<Member> byEmail = memberRepository.findByEmail(dto.getEmail());
+    public void validateDuplacateEmail(String name){
+        Optional<Member> byEmail = memberRepository.findByEmail(name);
         if(byEmail.isPresent()){
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
@@ -86,8 +78,8 @@ public class MemberService {
     /**
      * 닉네임 중복 검증
      */
-    private void validateDuplicateNickname(AddUserRequest dto){
-        Optional<Member> findMember = memberRepository.findByNickname(dto.getNickname());
+    public void validateDuplicateNickname(String name){
+        Optional<Member> findMember = memberRepository.findByNickname(name);
         if(findMember.isPresent()){
             throw new IllegalStateException("사용중인 닉네임입니다.");
         }

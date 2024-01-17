@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<div layout:fragment="script">
+    <script th:src="@{/js/signup.js}"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey='+${@environment.getProperty('app.kakaomap')}+'&libraries=services'}"></script>
+
+
+</div>
+<div layout:fragment="css">
+    <link th:href="@{/css/signup.css}" rel="stylesheet">
+
+</div>
+<div layout:fragment="content">
+    <div class="center">
+        <div class="w-25 p-3">
+            <div class="logo">
+                <h2>세차매니아</h2>
+            </div>
+            <div class="loginForm">
+                <div class="profile_img_wrap">
+                    <img id="profile_img" class="profile_img"
+                         src="/img/defaultProfile.jpg"/>
+                    <div class="trash_cover" id="delete_img">
+                        <label></label>
+                    </div>
+                </div>
+                <form action="/signup" method="POST" id="join_form" enctype="multipart/form-data">
+                    <label for="profileImage" class="form-label">프로필 이미지를 선택해주세요</label>
+                    <input type="file" class="form-control" name="file" id="profileImage" accept="image/*"/>
+                    <div class="email_line">
+                        <input type="text" class="form-control" name="email" id="email" placeholder="이메일 주소">
+                        <button type="button" class="btn btn-outline-dark" id="mail_btn" disabled="disabled">인증하기</button>
+                    </div>
+                    <div id="email_code_line" style="display: none">
+                        <input type="text" class="form-control" id="emailCode" placeholder="인증번호를 입력해주세요">
+                        <button type="button" class="btn btn-outline-dark" id="emailAcceptBtn">확인</button>
+                    </div>
+                    <div id="email_check"><br></div>
+                    <div>
+                        <input type="password" class="form-control" name="password" id="password" placeholder="비밀번호">
+                    </div>
+                    <div id="password_check">
+                        <span>비밀번호: 특수문자포함 영문/숫자 조합 8~16자리</span>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control" id="nickname" name="nickname" placeholder="닉네임">
+                    </div>
+                    <div id="nickname_check"><br></div>
+                    <div class="email_line">
+                        <input type="text" class="form-control" name="roadAddress" id="sample5_address" placeholder="주소">
+                        <input type="button" class="btn btn-outline-dark" id="daumPostBtn" value="주소 검색"><br>
+                    </div>
+                        <input type="text" class="form-control" name="extraAddr" id="extra_addr" placeholder="상세주소">
+                    <button type="submit" class="btn btn-warning" id="submitBtn">만들기</button>
+                </form>
+            </div>
+            <div class="inform">
+                <span>계정 생성은 서비스 약관에 동의하며 개인정보 보호정책을 검토했다는 뜻입니다. 이 사이트는 개인정보 보호정책 및 서비스 약관이 적용됩니다.</span>
+            </div>
+            <div class="divider">
+                <span class="line">또는</span>
+            </div>
+            <div class="other">
+                <a href="/oauth2/authorization/google">
+                    <img src="/img/googleSU.png" class="google">
+                </a>
+                <a th:href="@{/login}">계정이 있으세요? 로그인</a>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

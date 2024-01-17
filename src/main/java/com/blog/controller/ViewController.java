@@ -24,4 +24,9 @@ public class ViewController {
         model.addAttribute("loginErrorMsg","아이디 또는 비밀번호를 확인해주세요");
         return "user/login";
     }
+
+    @GetMapping("/signup")
+    public String signup(){
+        return "user/signup";
+    }
 }

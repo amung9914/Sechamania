@@ -1,0 +1,129 @@
+.center{
+    text-align: -webkit-center;
+}
+.logo{
+    margin: 40px;
+}
+.loginForm{
+    margin-bottom: 20px;
+}
+.notice{
+    color:orange;
+}
+
+#loginBtn {
+    width: -webkit-fill-available;
+}
+
+.divider {
+    position: relative;
+    margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    width: calc(50% - 5px);
+    height: 1px;
+    background-color: lightgray;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.divider::before {
+    right: 10px;
+}
+
+.divider::after {
+    left: 10px;
+}
+
+.line {
+    position: relative;
+    z-index: 2;
+    background-color: white;
+    padding: 0 10px;
+}
+.google{
+    height: 50px;
+    margin: 10px;
+}
+.other{
+    display: grid;
+}
+#submitBtn{
+    margin: 20px 0;
+}
+.profile_img_wrap{
+    position:relative;
+    margin: 20px auto;
+    width:128px;
+}
+
+.profile_img_wrap .profile_img{
+    width:128px;
+    height:128px;
+    border-radius:64px;
+}
+
+.profile_img_wrap .trash_cover{
+    width:40px;
+    height:40px;
+    position:absolute;
+    bottom:5px;
+    border:1px solid white;
+    background-color:#aaaaaa99;
+    border-radius:20px;
+    padding:4px;
+    box-sizing: border-box;
+}
+
+.profile_img_wrap .trash_cover > label{
+    display:block;
+    background-image:url('/img/trash.png');
+    background-size:30px;
+    background-repeat:no-repeat;
+    width:30px;
+    height:30px;
+    margin:0;
+}
+
+.profile_img_wrap .img_cover{
+    width:40px;
+    height:40px;
+    position:absolute;
+    bottom:5px;
+    right:5px;
+    border:1px solid white;
+    background-color:#aaaaaa99;
+    border-radius:20px;
+    padding:4px;
+    box-sizing: border-box;
+}
+
+.profile_img_wrap .img_cover > label{
+    display:inline-block;
+    background-image:url('/img/camera.png');
+    background-size:30px;
+    background-repeat:no-repeat;
+    width:30px;
+    height:30px;
+    margin:0;
+}
+.profile_img_wrap .img_cover, #delete_img {
+    display:none;
+}
+.email_line, #email_code_line{
+    display: flex;
+    margin: 10px 0;
+}
+#mail_btn, #emailAcceptBtn{
+    width: 103px;
+}
+#submitBtn{
+    width: -webkit-fill-available;
+}
+#nickname{
+    margin-top: 20px;
+}

@@ -27,27 +27,26 @@ class MemberServiceTest {
     EntityManager em;
 
     @Test
-    @Rollback(value = false)
     public void join() throws Exception {
         // given
-        AddUserRequest request1 = new AddUserRequest("admin@admin.com", "admin", "1234", "add","city", "lat", "lon");
+        AddUserRequest request1 = new AddUserRequest("test", "test", "1234", "add","r","city", "lat", "lon");
 
         // when
         memberService.join(request1,"default");
         em.flush();
         em.clear();
 
-        Optional<Member> findMember = memberRepository.findByEmail("admin@admin.com");
+        Optional<Member> findMember = memberRepository.findByEmail("test");
 
         // then
-        Assertions.assertThat(findMember.get().getEmail()).isEqualTo(request1.getEmail());
-        System.out.println("findMember.get().getProfileImg() = " + findMember.get().getProfileImg());
+        Assertions.assertThat(findMember.get().getAddress().getFullAddress()).isEqualTo("addr");
+
     }
 
     @Test
     public void joinForCompany() throws Exception {
         // given
-        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add","city", "lat", "lon");
+        AddUserRequest request1 = new AddUserRequest("test", "test", "1234", "add","r","city", "lat", "lon");
 
         // when
         memberService.joinForCompany(request1,null);
@@ -67,14 +66,12 @@ class MemberServiceTest {
     @Test
     public void duplicatedEmail() throws Exception {
         // given
-        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add", "city","lat", "lon");
-
+        AddUserRequest request1 = new AddUserRequest("test", "test", "1234", "add","r","city", "lat", "lon");
         // when
         memberService.join(request1,null);
         em.flush();
         em.clear();
-        AddUserRequest request2 = new AddUserRequest("member1", "nick2", "pass", "add", "city","lat", "lon");
-
+        AddUserRequest request2 = new AddUserRequest("test1", "test1", "1234", "add","r","city", "lat", "lon");
 
         //then
         assertThrows(IllegalStateException.class, () ->{
@@ -87,14 +84,12 @@ class MemberServiceTest {
     @Test
     public void duplicatedNickname() throws Exception {
         // given
-        AddUserRequest request1 = new AddUserRequest("member1", "nick1", "pass", "add","city", "lat", "lon");
-
+        AddUserRequest request1 = new AddUserRequest("test", "test", "1234", "add","r","city", "lat", "lon");
         // when
         memberService.join(request1,null);
         em.flush();
         em.clear();
-        AddUserRequest request2 = new AddUserRequest("member2", "nick1", "pass", "add", "city","lat", "lon");
-
+        AddUserRequest request2 = new AddUserRequest("test1", "test1", "1234", "add","r","city", "lat", "lon");
 
         //then
         assertThrows(IllegalStateException.class, () ->{
@@ -102,5 +97,7 @@ class MemberServiceTest {
         });
 
     }
+
+
 
 }

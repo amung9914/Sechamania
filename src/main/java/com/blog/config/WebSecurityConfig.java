@@ -18,11 +18,19 @@ public class WebSecurityConfig {
     private final UserDetailService userService;
     private final String[] RESOURCE = {"/css/**","/js/**","/img/**","/tempImg/**"};
 
+
+   /* @Bean
+    public WebSecurityCustomizer configure(){
+        return (web) -> web.ignoring()
+                .requestMatchers("http://dapi.kakao.com/*");
+
+    }*/
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/error","/","/test","/login","/login/**").permitAll()
+                        .requestMatchers("/error","/","/test","/login","/login/**","/signup","/signup/**").permitAll()
                         .requestMatchers(RESOURCE).permitAll()
                         .requestMatchers("/createBook").hasRole("ADMIN")
                         .anyRequest().authenticated()
