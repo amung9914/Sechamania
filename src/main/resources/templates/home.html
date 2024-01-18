@@ -59,7 +59,7 @@
         <div class="w-50 p-3" id="right_box">
             <h1>완벽한 세차를 꿈꾸고 계시나요?</h1>
             <h4>현재 날씨를 확인하고 세차를 시작해보세요</h4>
-            <th:block sec:authorize="isAnonymous()">
+            <div class="beforeLogin">
                 <div class="w-50 p-3">
                     <div class="weather_wrapper">
                         <div class="carousel slide">
@@ -77,8 +77,8 @@
                         </div>
                     </div>
                 </div>
-            </th:block>
-            <th:block sec:authorize="isAuthenticated()">
+            </div>
+            <div class="afterLogin">
                 <div class="w-50 p-3">
                     <div class="weather_wrapper">
                         <div class="carousel slide">
@@ -97,19 +97,19 @@
                         </div>
                     </div>
                 </div>
-            </th:block>
-            <th:block sec:authorize="isAuthenticated()">
+            </div>
+            <div class="afterLogin">
                 <div class="weather_com">
                     <p>부산</p>
                     <img class="marker" th:src="@{/img/marker.png}">
                     <p>오늘은 세차하기 좋은 날이에요</p>
                 </div>
-            </th:block>
-            <th:block sec:authorize="isAnonymous()">
+            </div>
+            <div class="beforeLogin">
                 <div class="weather_com">
                     <p>로그인하고 우리동네 날씨를 확인해보세요</p>
                 </div>
-            </th:block>
+            <div>
         </div>
     </div>
 </div>

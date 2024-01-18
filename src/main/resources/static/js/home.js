@@ -5,8 +5,9 @@ document.addEventListener('DOMContentLoaded',function (){
     let city = null;
     let lat = null;
     let lon = null;
+    let isLogin = localStorage.getItem("access_token");
     // 로그인 된 상태
-    if(weatherImg){
+    if(isLogin){
         let API_KEY = document.getElementById("openweather_key").value;
         function success(response){
             city = response.data.city;
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded',function (){
         function fail() {
             alert("회원정보를 불러올 수 없습니다");
         }
-        httpRequestWithResponse("GET","memberInfo",null,success,fail);
+        httpRequestWtihTokenAndResponse("GET","/memberInfo",null,success,fail);
 
         const getWeather = (lat, lon) => {
             fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=kr`)

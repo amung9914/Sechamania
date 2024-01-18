@@ -42,7 +42,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new IllegalArgumentException("일치하는 member가 존재하지 않습니다."));
         String accessToken = tokenProvider.generateToken(member, ACCESS_TOKEN_DURATION);
-        String targetUrl = getTargetUrl(accessToken,authentication);
         tokenProvider.sendAccessToken(response,accessToken);
         if(member.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))){
             tokenProvider.sendIsAdmin(response);
@@ -75,25 +74,4 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                 .map(entity -> entity.update(newRefreshToken))
                 .orElse(new RefreshToken(memberId, newRefreshToken));
     }
-
-    /**
-     * 액세스 토큰을 리다이렉트 경로 패스에 추가.
-     *  ex. http://localhost:8080/?token=123456789
-     */
-    private String getTargetUrl(String token,Authentication authentication){
-        if(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))){
-            return UriComponentsBuilder.fromUriString("/")
-                    .queryParam("token",token)
-                    .queryParam("admin","true")
-                    .build()
-                    .toUriString();
-        }else{
-            return UriComponentsBuilder.fromUriString("/")
-                    .queryParam("token",token)
-                    .build()
-                    .toUriString();
-        }
-
-    }
-
 }
