@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             function success(response){
                 const tokenFromHeader = response.headers.get('token');
                 if(tokenFromHeader){
-                    localStorage.setItem('token',tokenFromHeader);
+                    localStorage.setItem('access_token',tokenFromHeader);
                 }
                 const adminHeader = response.headers.get('admin');
                 if(adminHeader){

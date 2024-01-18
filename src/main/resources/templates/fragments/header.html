@@ -17,21 +17,24 @@
             <li class="nav-item">
               <a class="nav-link" href="#">공지사항</a>
             </li>
-              <li class="nav-item beforeLogin">
-                <a class="nav-link" id="login" th:href="@{/login}">로그인</a>
-              </li>
-              <li class="nav-item beforeLogin">
-                <a class="nav-link" id="signup" th:href="@{/signup}">회원가입</a>
-              </li>
-
-              <li class="nav-item afterLogin">
-                <a class="nav-link" id="logout" th:href="@{/logout}">로그아웃</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" id="admin" th:href="@{/signup}">관리자</a>
-              </li>
+            <li class="nav-item beforeLogin">
+              <a class="nav-link" id="login" th:href="@{/login}">로그인</a>
+            </li>
+            <li class="nav-item beforeLogin">
+              <a class="nav-link" id="signup" th:href="@{/signup}">회원가입</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="admin" th:href="@{/view/admin}">관리자</a>
+            </li>
+            <li class="nav-item afterLogin">
+              <a class="nav-link" th:href="@{/view/mypage}">마이페이지</a>
+            </li>
+            <li class="nav-item afterLogin">
+              <a class="nav-link" id="logout" th:href="@{/logout}">로그아웃</a>
+            </li>
             <li class="nav-item">
               <button class="btn btn-outline-warning" type="submit">Search</button>
+              <button class="btn btn-outline-warning" type="button" id="checkAuthority">권한체크</button>
             </li>
           </ul>
         </div>

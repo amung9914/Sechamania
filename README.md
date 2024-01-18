@@ -57,4 +57,6 @@ formLogin 기반으로 구현을 하다 JWT를 적용하게 되었는데,
 3. localstorage에 ``admin``이 존재하면 [관리자]버튼 출력
 3. SecurityConfig에서 requestMatchers를 통해 권한 확인 하므로 혹시나 관리자가 아닌 사람이 접근해도 문제 없음. 
 
+### 이게 맞나? springsecurity requestMatcher에 view를 다 열어 놓고 api만 막는게 맞나?
+
 

@@ -1,6 +1,7 @@
 package com.blog.config.jwt;
 
 import com.blog.entity.Member;
+import com.blog.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -10,21 +11,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service @RequiredArgsConstructor
 public class TokenProvider {
 
     private final JwtProperties jwtProperties;
+    private final MemberRepository memberRepository;
 
     private final static String HEADER_AUTHORIZATION = "token";
+
 
 
     public String generateToken(Member member, Duration expiredAt){
@@ -71,10 +73,12 @@ public class TokenProvider {
     //토큰 기반으로 인증 정보 가져오는 메서드
     public Authentication getAuthentication(String token){
         Claims claims = getClaims(token);
-        Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        Member member = memberRepository.findByEmail(claims.getSubject())
+                .orElseThrow(()-> new IllegalArgumentException("not found member:"+claims.getSubject()));
+        Collection<? extends GrantedAuthority> authorities = member.getAuthorities();
 
         return new UsernamePasswordAuthenticationToken(new org.springframework.security.core.userdetails.User(claims.getSubject(), "",authorities)
-        ,token,authorities);
+                ,token,authorities);
     }
 
     // 토큰 기반으로 유저 ID를 가져오는 메서드

@@ -5,6 +5,7 @@ import com.blog.config.jwt.LoginFailureHandler;
 import com.blog.config.jwt.LoginSuccessHandler;
 import com.blog.config.jwt.TokenProvider;
 import com.blog.repository.MemberRepository;
+import com.blog.repository.RefreshTokenRepository;
 import com.blog.service.UserDetailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class SecurityConfig {
     private final UserDetailService userDetailService;
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final ObjectMapper objectMapper;
     private final String[] RESOURCE = {"/css/**","/js/**","/img/**","/tempImg/**"};
 
@@ -45,9 +47,9 @@ public class SecurityConfig {
 
                 http.authorizeHttpRequests(request -> request
                         .requestMatchers("/error","/","/login","/login/**",
-                                "/mail","/test/**","/signup","/signup/**").permitAll()
+                                "/mail","/test/**","/signup","/signup/**","/view/**").permitAll()
                         .requestMatchers(RESOURCE).permitAll()
-                        .requestMatchers("admin","/admin/**").hasRole("ADMIN")
+                        .requestMatchers("admin","/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
@@ -84,7 +86,7 @@ public class SecurityConfig {
 
     @Bean
     public LoginSuccessHandler loginSuccessHandler(){
-        return new LoginSuccessHandler(tokenProvider,memberRepository);
+        return new LoginSuccessHandler(tokenProvider,refreshTokenRepository,memberRepository);
     }
 
     @Bean

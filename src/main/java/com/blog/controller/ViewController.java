@@ -11,22 +11,32 @@ public class ViewController {
 
     @GetMapping("/test")
     public String imgtest(){
-        return "test/img";
+        return "/test/img";
     }
 
     @GetMapping("/login")
     public String login(){
-        return "user/login";
+        return "/user/login";
     }
 
     @GetMapping("/login/error")
     public String loginError(Model model){
         model.addAttribute("loginErrorMsg","아이디 또는 비밀번호를 확인해주세요");
-        return "user/login";
+        return "/user/login";
     }
 
     @GetMapping("/signup")
     public String signup(){
-        return "user/signup";
+        return "/user/signup";
+    }
+
+    @GetMapping("/view/admin")
+    public String admin(){
+        return "admin";
+    }
+
+    @GetMapping("/view/mypage")
+    public String mypage(){
+        return "/user/mypage";
     }
 }
