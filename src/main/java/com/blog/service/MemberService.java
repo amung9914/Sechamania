@@ -1,6 +1,7 @@
 package com.blog.service;
 
 import com.blog.dto.AddUserRequest;
+import com.blog.dto.OauthSignupRequest;
 import com.blog.entity.Authorities;
 import com.blog.entity.Member;
 import com.blog.entity.MemberStatus;
@@ -90,4 +91,11 @@ public class MemberService {
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
     }
 
+    @Transactional
+    public void joinForOauth(OauthSignupRequest request, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 email입니다"));
+        member.updateNickname(request.getNickname());
+        member.updateAddress(request.getAddress());
+    }
 }

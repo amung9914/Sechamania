@@ -51,6 +51,22 @@ public class Member extends BaseTimeEntity implements UserDetails {
     }
 
     /**
+     * 사용자 닉네임 변경
+     */
+    public Member updateNickname(String nickname){
+        this.nickname = nickname;
+        return this;
+    }
+
+    /**
+     * 사용자 주소 변경
+     */
+    public Member updateAddress(Address address){
+        this.address = address;
+        return this;
+    }
+
+    /**
      * 권한 설정용 메서드
      */
     public List<Authorities> makeUserRole(){

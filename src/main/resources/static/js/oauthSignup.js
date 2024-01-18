@@ -20,48 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     /* 회원가입 검증 시작*/
 
-    let validEmailForRegex = false; // 정규식 통과 여부
-    let validEmail = false; // 중복검증 통과 여부
-    // 이메일 정규 표현식
-    const regexEmail =/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-    const elp = document.getElementById("email_check");
-    const email = document.getElementById("email");
-
-    email.addEventListener("input",function(){
-        let message = "올바른 이메일 주소를 입력해주세요";
-        validEmailForRegex = checkRegex(elp,email.value,regexEmail,message);
-        if(validEmailForRegex){
-            // 아이디 중복검사 결과 요청
-            function success(){
-                showMessage(elp,"이메일: 사용할 수 있는 이메일입니다",true);
-                validEmail = true;
-                document.getElementById("mail_btn").disabled = false;
-            }
-            function fail(){
-                showMessage(elp,"이메일: 사용할 수 없는 이메일입니다",false);
-                document.getElementById("mail_btn").disabled = true;
-                validEmail = false;
-            }
-
-            httpRequestGet("/signup/email/"+email.value,success,fail);
-        }
-    });
-
-    document.getElementById("mail_btn").addEventListener('click',function(){
-        document.getElementById("email_code_line").style.display='flex';
-    })
-
-    let boolPassword = false;
-    // 특수문자 포함 비밀번호
-    var regexPass = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
-    const password = document.getElementById("password");
-    const elpPw = document.getElementById("password_check");
-    password.addEventListener("input", function (){
-        let valP = this.value;
-        let message = "비밀번호: 특수문자포함 영문/숫자 조합 8~16자리"
-        boolPassword = checkRegex(elpPw,valP,regexPass,message);
-    });
-
     let boolNickname = false; // 닉네임 검증
     const elpNickname = document.getElementById("nickname_check");
     const nickname = document.getElementById("nickname");
@@ -80,40 +38,6 @@ document.addEventListener('DOMContentLoaded', function() {
         httpRequestGet("/signup/nickname/"+nickname.value,success,fail);
     });
 
-    /* 이메일 인증 */
-    let confirmCode = null;
-    const mailBtn = document.getElementById("mail_btn");
-    mailBtn.addEventListener("click",function (){
-        if(validEmailForRegex){
-            data = JSON.stringify({
-                "mail" : document.getElementById("email").value
-            });
-            function success(response){
-                alert("인증번호를 발송하였습니다");
-                confirmCode = response.data;
-            }
-            function fail(){
-                alert("메일전송실패");
-            }
-            httpRequestWithResponse("POST","/mail",data,success,fail);
-        }
-    });
-
-    //이메일 검증
-    let boolEmailCode = false;
-    document.getElementById("emailAcceptBtn").addEventListener("click", function(){
-        let userCode = document.getElementById("emailCode").value;
-        if(confirmCode == userCode){
-            alert("이메일 인증이 완료되었습니다.")
-            boolEmailCode = true;
-            document.getElementById("mail_btn").disabled = true;
-        }else{
-            boolEmailCode = false;
-            alert("인증코드를 다시 확인해주세요.");
-        }
-
-    });
-    /* 이메일 인증 END */
 
     /**
      * 우편번호 서비스
@@ -180,32 +104,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 location.replace("/signup");
             }
 
-            if (!validEmail) {
-                // 이메일 유효성 검사 완료 여부
-                alert("이메일을 확인해주세요.");
-                document.getElementById("memberName").focus();
-            } else if(!boolEmailCode){
-                alert("이메일 인증을 완료해주세요.");
-                document.getElementById("memberName").focus();
-            } else if (!boolPassword) {
-                alert("비밀번호를 확인해주세요.");
-                document.getElementById("password").focus();
-            } else if (!boolNickname) {
+            if (!boolNickname) {
                 alert("닉네임을 확인해주세요.");
                 document.getElementById("nickname").focus();
             }else if (lat === null) {
                 alert("주소를 확인해주세요.");
                 document.getElementById("findAddr").focus();
             }else {
-                httpRequestForFormData("POST", "signup", body, success, fail);
+                httpRequestForFormDataWtihToken("POST", "/oauthSignup", body, success, fail);
             }
         });
     } // joinForm end
-
-
-
-
-
 
 });
 
@@ -219,20 +128,6 @@ function showMessage(box,messageP,isCheck){
     }else{
         let html = '<span class="notice">' + messageP+'</span>';
         box.innerHTML = html;
-    }
-}
-
-
-// 정규 표현식 검사
-// checkRegex(메세지를 출력할 요소,검사할 값,비교할 정규표현식,출력할 메세지)
-function checkRegex(elP,valP,regexP,messageP){
-    // 정규표현식 패턴과 사용자가 작성한 내용의 패턴이 일치하지 않음
-    if(regexP.test(valP) === false){
-        showMessage(elP,messageP,false);
-        return false;
-    }else if(regexP.test(valP) !== false){
-        showMessage(elP,messageP,true);
-        return true;
     }
 }
 

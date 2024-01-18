@@ -4,8 +4,12 @@ import com.blog.config.jwt.CustomJsonUsernamePasswordAuthenticationFilter;
 import com.blog.config.jwt.LoginFailureHandler;
 import com.blog.config.jwt.LoginSuccessHandler;
 import com.blog.config.jwt.TokenProvider;
+import com.blog.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.blog.config.oauth.OAuth2SuccessHandler;
+import com.blog.config.oauth.OAuth2UserCustomService;
 import com.blog.repository.MemberRepository;
 import com.blog.repository.RefreshTokenRepository;
+import com.blog.service.MemberService;
 import com.blog.service.UserDetailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +33,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
+    private final OAuth2UserCustomService oAuth2UserCustomService;
     private final UserDetailService userDetailService;
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
@@ -47,13 +51,23 @@ public class SecurityConfig {
 
                 http.authorizeHttpRequests(request -> request
                         .requestMatchers("/error","/","/login","/login/**",
-                                "/mail","/test/**","/signup","/signup/**","/view/**","/memberInfo").permitAll()
+                                "/mail","/test/**","/signup","/signup/**","/view/**").permitAll()
                         .requestMatchers(RESOURCE).permitAll()
                         .requestMatchers("admin","/admin/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login"));
+
+        http.oauth2Login(request -> request
+                .loginPage("/login")
+                .authorizationEndpoint()
+                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                .and()
+                .successHandler(oAuth2SccessHandler())
+                .userInfoEndpoint()
+                .userService(oAuth2UserCustomService));
+
         // /api로 시작하는 url인 경우 401 상태코드 반환
         http.exceptionHandling(e -> e
                 .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
@@ -104,7 +118,17 @@ public class SecurityConfig {
         return customJsonUsernamePasswordAuthenticationFilter;
     }
 
+    @Bean
+    public OAuth2SuccessHandler oAuth2SccessHandler(){
+        return new OAuth2SuccessHandler(tokenProvider,
+                refreshTokenRepository,
+                oAuth2AuthorizationRequestBasedOnCookieRepository(),
+                memberRepository);
+    }
 
-
+    @Bean
+    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository(){
+        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
+    }
 
 }

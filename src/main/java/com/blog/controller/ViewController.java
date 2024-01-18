@@ -30,6 +30,11 @@ public class ViewController {
         return "/user/signup";
     }
 
+    @GetMapping("/signup/oauth2")
+    public String signupByOauth2(){
+        return "/user/oauthSignup";
+    }
+
     @GetMapping("/view/admin")
     public String admin(){
         return "admin";
