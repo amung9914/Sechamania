@@ -33,6 +33,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
+	implementation 'io.jsonwebtoken:jjwt:0.9.1' // 자바 jwt 라이브러리
+	implementation 'javax.xml.bind:jaxb-api:2.3.1'
+	testImplementation 'org.testng:testng:7.1.0'// xml문서와 java 객체간 매핑 자동화
+
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

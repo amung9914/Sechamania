@@ -34,7 +34,7 @@ public class MemberService {
                 .build();
         memberRepository.save(newMember);
 
-        Authorities auth = new Authorities("USER");
+        Authorities auth = new Authorities("ROLE_USER");
         authorityRepository.save(auth);
         auth.makeRole(newMember);
 
@@ -53,11 +53,11 @@ public class MemberService {
                 .build();
         memberRepository.save(newMember);
 
-        Authorities userAuth = new Authorities("USER");
+        Authorities userAuth = new Authorities("ROLE_USER");
         authorityRepository.save(userAuth);
         userAuth.makeRole(newMember);
 
-        Authorities companyAuth = new Authorities("COMPANY");
+        Authorities companyAuth = new Authorities("ROLE_COMPANY");
         authorityRepository.save(companyAuth);
         companyAuth.makeRole(newMember);
 
@@ -84,4 +84,10 @@ public class MemberService {
             throw new IllegalStateException("사용중인 닉네임입니다.");
         }
     }
+
+    public Member findByEmail(String email){
+        return memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
+    }
+
 }

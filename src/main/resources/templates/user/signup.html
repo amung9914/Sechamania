@@ -28,8 +28,6 @@
                     </div>
                 </div>
                 <form action="/signup" method="POST" id="join_form" enctype="multipart/form-data">
-                    <label for="profileImage" class="form-label">프로필 이미지를 선택해주세요</label>
-                    <input type="file" class="form-control" name="file" id="profileImage" accept="image/*"/>
                     <div class="email_line">
                         <input type="text" class="form-control" name="email" id="email" placeholder="이메일 주소">
                         <button type="button" class="btn btn-outline-dark" id="mail_btn" disabled="disabled">인증하기</button>
@@ -50,10 +48,15 @@
                     </div>
                     <div id="nickname_check"><br></div>
                     <div class="email_line">
-                        <input type="text" class="form-control" name="roadAddress" id="sample5_address" placeholder="주소">
+                        <input type="text" class="form-control" name="roadAddress" id="findAddr" placeholder="주소">
                         <input type="button" class="btn btn-outline-dark" id="daumPostBtn" value="주소 검색"><br>
                     </div>
                         <input type="text" class="form-control" name="extraAddr" id="extra_addr" placeholder="상세주소">
+                        <div class="photo">
+                            <label for="profileImage" class="form-label">사용하실 프로필 이미지를 등록해주세요</label>
+                            <input type="file" class="form-control" name="file" id="profileImage" accept="image/*"/>
+                        </div>
+
                     <button type="submit" class="btn btn-warning" id="submitBtn">만들기</button>
                 </form>
             </div>

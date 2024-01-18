@@ -25,3 +25,12 @@ a{
 .content{
     margin-top:110px;
 }
+.beforeLogin{
+    display: inline-block;
+}
+.afterLogin{
+    display: none;
+}
+#admin{
+    display: none;
+}

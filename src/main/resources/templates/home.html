@@ -4,15 +4,17 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/default}">
 <div layout:fragment="script">
+    <script th:src="@{/js/home.js}"></script>
 </div>
 <div layout:fragment="css">
     <style>
 
-        .top{
+        .top {
             display: inline-flex;
             padding: 60px;
         }
-        .weather_com{
+
+        .weather_com {
             background-color: #f6f7e5;
             margin: 10px;
             border-radius: 30px;
@@ -20,65 +22,95 @@
             display: inline-flex;
             font-size: 20px;
         }
-        .weather_com p{
+
+        .weather_com p {
             margin: 5px;
         }
-        #right_box{
+
+        #right_box {
             margin: 50px 0 0 0;
             text-align: -webkit-center;
         }
-        #weather_img{
+
+        .weather_img {
             border-radius: 30px;
+        }
+        .marker{
+            height: fit-content;
+            padding-top: inherit;
         }
     </style>
 </div>
-    <div layout:fragment="content">
-        <div class="top">
-            <div class="w-50 p-3">
-                <div id="carouselExampleCaptions" class="carousel slide">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img th:src="@{/img/car2.jpg}" class="d-block w-100" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h2><b>세차를 가장 재밌게 시작하는 방법</b></h2>
-                                <h5><b>세차매니아와 세차를 시작해보세요!</b></h5>
-                            </div>
+<div layout:fragment="content">
+    <div class="top">
+        <div class="w-50 p-3">
+            <div id="carouselExampleCaptions" class="carousel slide">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img th:src="@{/img/car2.jpg}" class="d-block w-100" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h2><b>세차를 가장 재밌게 시작하는 방법</b></h2>
+                            <h5><b>세차매니아와 세차를 시작해보세요!</b></h5>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="w-50 p-3" id="right_box">
-                <h1>완벽한 세차를 꿈꾸고 계시나요?</h1>
-                <h4>현재 날씨를 확인하고 세차를 시작해보세요</h4>
-                    <div class="w-50 p-3">
-                        <div class="weather_wrapper">
-                            <div class="carousel slide">
-                                <div class="carousel-inner">
-                                    <div class="carousel-item active">
-                                        <img th:src="@{/img/rain.jpg}" class="d-block w-100" id="weather_img">
-                                        <div class="carousel-caption d-none d-md-block">
-                                            <h3></h3>
-                                            <h4>오늘은</h4>
-                                            <h4>세차할 수 있을까?</h4>
-                                            <h5></h5>
-                                            <!--<h3>맑음</h3>
-                                            <h4>오늘의 기온 6°C</h4>
-                                            <h4>(12 / -3)</h4>
-                                            <h5></h5>-->
-                                        </div>
-
+        </div>
+        <div class="w-50 p-3" id="right_box">
+            <h1>완벽한 세차를 꿈꾸고 계시나요?</h1>
+            <h4>현재 날씨를 확인하고 세차를 시작해보세요</h4>
+            <th:block sec:authorize="isAnonymous()">
+                <div class="w-50 p-3">
+                    <div class="weather_wrapper">
+                        <div class="carousel slide">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img th:src="@{/img/rain.jpg}" class="d-block w-100 weather_img">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h3></h3>
+                                        <h4>오늘은</h4>
+                                        <h4>세차할 수 있을까?</h4>
+                                        <h5></h5>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                     </div>
-                    <div class="weather_com">
-                        <p>부산<p>
-                        <img th:src="@{/img/marker.png}">
-                        <p>오늘은 세차하기 좋은 날이에요</p>
                     </div>
-                <!--<h4 class="weather_com">로그인하고 우리동네 날씨를 확인해보세요</h4>-->
-            </div>
+                </div>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+                <div class="w-50 p-3">
+                    <div class="weather_wrapper">
+                        <div class="carousel slide">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img th:src="@{/img/rain.jpg}" class="d-block w-100 weather_img" id="weather_img">
+                                    <input type="hidden" th:value="${@environment.getProperty('app.openweather')}" id="openweather_key">
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h3>맑음</h3>
+                                        <h4>오늘의 기온 6°C</h4>
+                                        <h4>(12 / -3)</h4>
+                                        <h5></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            <th:block sec:authorize="isAuthenticated()">
+                <div class="weather_com">
+                    <p>부산</p>
+                    <img class="marker" th:src="@{/img/marker.png}">
+                    <p>오늘은 세차하기 좋은 날이에요</p>
+                </div>
+            </th:block>
+            <th:block sec:authorize="isAnonymous()">
+                <div class="weather_com">
+                    <p>로그인하고 우리동네 날씨를 확인해보세요</p>
+                </div>
+            </th:block>
         </div>
     </div>
+</div>
 </html>

@@ -35,21 +35,21 @@ public class initDb {
                     .email("admin@admin.com")
                     .password("$2a$10$WvmocswXUNtFTenr8jZh4uNPwmRrTGufupnElllKk61.OaG1GqXQe")
                     .nickname("admin")
-                    .address(new Address("fulladdr","city","lat","lon"))
+                    .address(new Address("서울 영등포구 국제금융로 101층","영등포구","37.5251775245928","126.924876706923"))
                     .status(MemberStatus.ACTIVE)
                     .imgPath("img/defaultProfile.jpg")
                     .build();
             memberRepository.save(newMember);
 
-            Authorities userAuth = new Authorities("USER");
+            Authorities userAuth = new Authorities("ROLE_USER");
             authorityRepository.save(userAuth);
             userAuth.makeRole(newMember);
 
-            Authorities companyAuth = new Authorities("COMPANY");
+            Authorities companyAuth = new Authorities("ROLE_COMPANY");
             authorityRepository.save(companyAuth);
             companyAuth.makeRole(newMember);
 
-            Authorities adminAuth = new Authorities("ADMIN");
+            Authorities adminAuth = new Authorities("ROLE_ADMIN");
             authorityRepository.save(adminAuth);
             adminAuth.makeRole(newMember);
         }

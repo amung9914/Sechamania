@@ -81,15 +81,47 @@ document.addEventListener('DOMContentLoaded', function() {
         httpRequestGet("/signup/nickname/"+nickname.value,success,fail);
     });
 
-    //이메일 검증
-    let boolEmailCode = true
+    /* 이메일 인증 */
+    let confirmCode = null;
+    const mailBtn = document.getElementById("mail_btn");
+    mailBtn.addEventListener("click",function (){
+        if(validEmailForRegex){
+            data = JSON.stringify({
+                "mail" : document.getElementById("email").value
+            });
+            function success(response){
+                alert("인증번호를 발송하였습니다");
+                confirmCode = response.data;
+            }
+            function fail(){
+                alert("메일전송실패");
+            }
+            httpRequestWithResponse("POST","/mail",data,success,fail);
+        }
+    });
 
-    let lat = null;
-    let lon = null;
-    let city = null;
+    //이메일 검증
+    let boolEmailCode = false;
+    document.getElementById("emailAcceptBtn").addEventListener("click", function(){
+        let userCode = document.getElementById("emailCode").value;
+        if(confirmCode == userCode){
+            alert("이메일 인증이 완료되었습니다.")
+            boolEmailCode = true;
+            document.getElementById("mail_btn").disabled = true;
+        }else{
+            boolEmailCode = false;
+            alert("인증코드를 다시 확인해주세요.");
+        }
+
+    });
+    /* 이메일 인증 END */
+
     /**
      * 우편번호 서비스
      */
+    let lat = null;
+    let lon = null;
+    let city = null;
     document.getElementById("daumPostBtn").addEventListener('click',function(){
         daumPostcode();
     })
@@ -103,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 city = data.sigungu;
 
                 // 주소 정보를 해당 필드에 넣는다.
-                document.getElementById("sample5_address").value = addr;
+                document.getElementById("findAddr").value = addr;
                 // 주소로 상세 정보를 검색
                 geocoder.addressSearch(data.address, function(results, status) {
                     // 정상적으로 검색이 완료됐으면
@@ -111,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         var result = results[0]; //첫번째 결과의 값을 활용
 
-                        // 해당 주소에 대한 좌표를 받아서
+                        // 해당 주소에 대한 좌표를 받아서 좌표로 변환한다
                         var coords = new daum.maps.LatLng(result.y, result.x);
                         lat = coords.getLat();
                         lon = coords.getLng();
@@ -146,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             function fail() {
                 alert("회원 가입이 실패했습니다.");
-                location.replace("/");
+                location.replace("/signup");
             }
 
             if (!validEmail) {
@@ -162,11 +194,12 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (!boolNickname) {
                 alert("닉네임을 확인해주세요.");
                 document.getElementById("nickname").focus();
-            } else {
+            }else if (lat === null) {
+                alert("주소를 확인해주세요.");
+                document.getElementById("findAddr").focus();
+            }else {
                 httpRequestForFormData("POST", "signup", body, success, fail);
             }
-
-
         });
     } // joinForm end
 

@@ -1,3 +1,4 @@
+/*
 package com.blog.config;
 
 import com.blog.service.UserDetailService;
@@ -19,20 +20,23 @@ public class WebSecurityConfig {
     private final String[] RESOURCE = {"/css/**","/js/**","/img/**","/tempImg/**"};
 
 
-   /* @Bean
+   */
+/* @Bean
     public WebSecurityCustomizer configure(){
         return (web) -> web.ignoring()
                 .requestMatchers("http://dapi.kakao.com/*");
 
-    }*/
+    }*//*
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/error","/","/test","/login","/login/**","/signup","/signup/**").permitAll()
+                        .requestMatchers("/error","/","/login","/login/**",
+                                "/mail","/test/**","/signup","/signup/**").permitAll()
                         .requestMatchers(RESOURCE).permitAll()
-                        .requestMatchers("/createBook").hasRole("ADMIN")
+                        .requestMatchers("admin","/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
@@ -62,3 +66,4 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+*/

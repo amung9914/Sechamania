@@ -18,8 +18,35 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
 
         if(validEmailForRegex){
-            console.log(email.value);
-            document.getElementById("login_form").submit();
+            function success(response){
+                const tokenFromHeader = response.headers.get('token');
+                if(tokenFromHeader){
+                    localStorage.setItem('token',tokenFromHeader);
+                }
+                const adminHeader = response.headers.get('admin');
+                if(adminHeader){
+                    localStorage.setItem('admin',adminHeader);
+                }
+                location.replace("/");
+            }
+
+            fetch("/login", {
+                method: "POST",
+                headers: {
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({
+                    "email" : email.value,
+                    "password" : document.getElementById("password").value
+                }),
+            }).then(response =>{
+                if(response.status ===200 || response.status ===201){
+                    return success(response);
+                }else{
+                    location.replace("/login/error");
+                }
+
+            });
         }
     });
 
