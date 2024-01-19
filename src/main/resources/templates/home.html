@@ -5,6 +5,8 @@
       layout:decorate="~{layouts/default}">
 <div layout:fragment="script">
     <script th:src="@{/js/home.js}"></script>
+    <script th:src="@{/js/grid.js}"></script>
+    <script th:src="@{/js/weather.js}"></script>
 </div>
 <div layout:fragment="css">
     <style>
@@ -84,13 +86,12 @@
                         <div class="carousel slide">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
-                                    <img th:src="@{/img/rain.jpg}" class="d-block w-100 weather_img" id="weather_img">
-                                    <input type="hidden" th:value="${@environment.getProperty('app.openweather')}" id="openweather_key">
+                                    <img th:src="@{/img/clearSky.jpg}" class="d-block w-100 weather_img" id="weather_img">
+                                    <input type="hidden" th:value="${@environment.getProperty('app.weather')}" id="weather_key">
                                     <div class="carousel-caption d-none d-md-block">
-                                        <h3>맑음</h3>
-                                        <h4>오늘의 기온 6°C</h4>
-                                        <h4>(12 / -3)</h4>
-                                        <h5></h5>
+                                        <h3 id="sky"></h3>
+                                        <h4 id="temp"></h4>
+                                        <h5 id="forecast"></h5>
                                     </div>
                                 </div>
                             </div>
@@ -100,16 +101,16 @@
             </div>
             <div class="afterLogin">
                 <div class="weather_com">
-                    <p>부산</p>
+                    <p id="city">부산</p>
                     <img class="marker" th:src="@{/img/marker.png}">
-                    <p>오늘은 세차하기 좋은 날이에요</p>
+                    <p id="summary">오늘은 세차하기 좋은 날이에요</p>
                 </div>
             </div>
             <div class="beforeLogin">
                 <div class="weather_com">
                     <p>로그인하고 우리동네 날씨를 확인해보세요</p>
                 </div>
-            <div>
+            </div>
         </div>
     </div>
 </div>
