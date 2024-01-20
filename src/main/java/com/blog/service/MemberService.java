@@ -2,15 +2,18 @@ package com.blog.service;
 
 import com.blog.dto.AddUserRequest;
 import com.blog.dto.OauthSignupRequest;
+import com.blog.dto.UpdateMemberDto;
 import com.blog.entity.Authorities;
 import com.blog.entity.Member;
 import com.blog.entity.MemberStatus;
 import com.blog.repository.AuthorityRepository;
 import com.blog.repository.MemberRepository;
+import com.blog.util.ImgUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -23,15 +26,25 @@ public class MemberService {
     private final AuthorityRepository authorityRepository;
     private final BCryptPasswordEncoder encoder;
 
+    private final ImgUploader imgUploader;
+
     @Transactional
-    public Long join(AddUserRequest dto,String imgPath){
+    public Long join(AddUserRequest dto, MultipartFile file){
+
+        String path = null;
+        if(file.isEmpty()){
+            path = "img/defaultProfile.jpg";
+        }else{
+            path = imgUploader.savdImg(file);
+        }
+
         Member newMember = Member.builder()
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword()))
                 .nickname(dto.getNickname())
                 .address(dto.getAddress())
                 .status(MemberStatus.ACTIVE)
-                .imgPath(imgPath==null?"/img/defaultProfile.jpg":imgPath)
+                .imgPath(path==null?"/img/defaultProfile.jpg":path)
                 .build();
         memberRepository.save(newMember);
 
@@ -43,14 +56,21 @@ public class MemberService {
     }
 
     @Transactional
-    public Long joinForCompany(AddUserRequest dto,String imgPath){
+    public Long joinForCompany(AddUserRequest dto,MultipartFile file){
+        String path = null;
+        if(file.isEmpty()){
+            path = "img/defaultProfile.jpg";
+        }else{
+            path = imgUploader.savdImg(file);
+        }
+
         Member newMember = Member.builder()
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword()))
                 .nickname(dto.getNickname())
                 .address(dto.getAddress())
                 .status(MemberStatus.ACTIVE)
-                .imgPath(imgPath==null?"/img/defaultProfile.jpg":imgPath)
+                .imgPath(path==null?"/img/defaultProfile.jpg":path)
                 .build();
         memberRepository.save(newMember);
 
@@ -92,10 +112,52 @@ public class MemberService {
     }
 
     @Transactional
-    public void joinForOauth(OauthSignupRequest request, String email) {
+    public void joinForOauth(OauthSignupRequest request, String email,MultipartFile file) {
+
+        String path = null;
+        if(file.isEmpty()){
+            path = "img/defaultProfile.jpg";
+        }else{
+            path = imgUploader.savdImg(file);
+        }
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 email입니다"));
         member.updateNickname(request.getNickname());
         member.updateAddress(request.getAddress());
+        member.updateProfileImg(path);
+    }
+
+    @Transactional
+    public void updateMember(String email, UpdateMemberDto dto,MultipartFile file){
+
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 email입니다"));
+        if(!member.getNickname().equals(dto.getNickname())){
+            validateDuplicateNickname(dto.getNickname());
+            member.updateNickname(dto.getNickname());
+        }
+        if(dto.getAddress()!=null){
+            member.updateAddress(dto.getAddress());
+        }
+        if(file!=null){
+
+            String path = null;
+            path = imgUploader.savdImg(file);
+
+            member.updateProfileImg(path);
+        }
+    }
+
+    @Transactional
+    public void updatePassword(String email, String password,String newpassword){
+        Member member = memberRepository.findByEmail(email)
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 email입니다."));
+        // 비교할 요청값과 실제 암호화된 암호 비교
+        if(encoder.matches(password, member.getPassword())){
+            member.updatePassword(encoder.encode(newpassword));
+        }else{
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

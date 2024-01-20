@@ -17,13 +17,13 @@ public class Category extends BaseEntity{
     private Long id;
 
     @Column(nullable = false)
-    private String categoryName;
+    private String name;
 
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
+    public Category(String name) {
+        this.name = name;
     }
 
     public void updateName(String name){
-        this.categoryName = name;
+        this.name = name;
     }
 }

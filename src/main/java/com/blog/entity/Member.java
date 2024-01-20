@@ -67,6 +67,18 @@ public class Member extends BaseTimeEntity implements UserDetails {
     }
 
     /**
+     * 사용자 암호 변경
+     */
+    public Member updatePassword(String password){
+        this.password = password;
+        return this;
+    }
+    public Member updateProfileImg(String profileImg){
+        this.profileImg = profileImg;
+        return this;
+    }
+
+    /**
      * 권한 설정용 메서드
      */
     public List<Authorities> makeUserRole(){

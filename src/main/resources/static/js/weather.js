@@ -23,10 +23,19 @@ function weather_data(data){
     document.getElementById("sky").innerText = make_weather(currentSKY,currentPTY);
     const currentTMP = data.response.body.items.item[0].fcstValue;
     document.getElementById("temp").innerText = '현재 기온 '+currentTMP+'°C';
+    let after10HourSKY = null;
+    let after10HourPTY = null;
 
-    const after10HourSKY = data.response.body.items.item[102];
+    if(data.response.body.items.item[102].category==='SKY'){
+        after10HourSKY = data.response.body.items.item[102];
+        after10HourPTY = data.response.body.items.item[103];
+    }else{
+        after10HourSKY = data.response.body.items.item[101];
+        after10HourPTY = data.response.body.items.item[102];
+    }
+
     const time_weather = after10HourSKY.fcstTime.slice(0, -2);
-    const after10HourPTY = data.response.body.items.item[103];
+
     document.getElementById("forecast").innerText =
         calcTime(time_weather,make_forecastWeather(after10HourSKY.fcstValue,after10HourPTY.fcstValue));
     document.getElementById("summary").innerText =

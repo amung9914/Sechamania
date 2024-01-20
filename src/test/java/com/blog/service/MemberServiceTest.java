@@ -32,7 +32,7 @@ class MemberServiceTest {
         AddUserRequest request1 = new AddUserRequest("test", "test", "1234", "add","r","city", "lat", "lon");
 
         // when
-        memberService.join(request1,"default");
+        memberService.join(request1,null);
         em.flush();
         em.clear();
 

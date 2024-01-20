@@ -40,4 +40,10 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
+    public Category findByName(String name){
+        return categoryRepository.findCategoryByName(name)
+                .orElseThrow(()-> new IllegalArgumentException("not found:"+name));
+
+    }
+
 }

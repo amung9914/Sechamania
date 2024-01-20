@@ -37,11 +37,16 @@ public class ViewController {
 
     @GetMapping("/view/admin")
     public String admin(){
-        return "admin";
+        return "/admin/admin";
     }
 
     @GetMapping("/view/mypage")
     public String mypage(){
         return "/user/mypage";
+    }
+
+    @GetMapping("/view/article")
+    public String articleMain(){
+        return "/article/main";
     }
 }
