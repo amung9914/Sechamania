@@ -24,7 +24,9 @@ public class initDb {
         initService.dbInit1();
         initService.dbInit2();
         initService.makeCategories();
-        initService.makeArticle();
+        for (int i = 0; i <100; i++) {
+            initService.makeArticle();
+        }
     }
 
     @Component
@@ -93,8 +95,19 @@ public class initDb {
         public void makeArticle(){
             Category category = categoryService.findByName("자유게시판");
             AddArticleDto addArticleDto = new AddArticleDto("안녕하세요", "여러분 환영합니다", category.getId());
+            String[] arr = {"환영인사","안녕"};
+
             // when
-            articleService.save("admin@admin.com",addArticleDto);
+            articleService.saveWithHashtag("admin@admin.com",addArticleDto,arr);
+
+            Category category1 = categoryService.findByName("셀프세차장후기");
+            AddArticleDto addArticleDto1 = new AddArticleDto("킹콩샤워 마곡직영점 사용 후기", "생각보다 좋을지도", category1.getId());
+            String[] arr1 = {"마곡","셀프세차"};
+            articleService.saveWithHashtag("user@user.com",addArticleDto1,arr1);
+
+            AddArticleDto addArticleDto2 = new AddArticleDto("오늘 진짜 춥네요", "낮인데 영하 7도네요", category.getId());
+            String[] arr2 = {"날씨","영하","눈소식","눈소식1","눈소식2","눈소식3","눈소식4","눈소식5",};
+            articleService.saveWithHashtag("user@user.com",addArticleDto2,arr2);
         }
     }
 }

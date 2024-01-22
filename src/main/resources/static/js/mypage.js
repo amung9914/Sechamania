@@ -158,6 +158,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }); // END openPassword
 
+    document.getElementById("withdraw_btn").addEventListener('click',function(){
+        function success(){
+            alert("계정삭제가 완료되었습니다.");
+            location.replace("/");
+        }
+        function fail(){
+            alert("계정삭제가 정상적으로 처리되지 않았습니다");
+            location.replace("/view/mypage");
+        }
+       httpRequestGet("/withdraw",success,fail);
+    });
+
 });
 
 

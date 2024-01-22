@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -76,6 +77,15 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public Member updateProfileImg(String profileImg){
         this.profileImg = profileImg;
         return this;
+    }
+
+    /**
+     * 사용자 탈퇴
+     */
+    public Member withDraw(){
+        this.status = MemberStatus.WITHDRAW;
+        return this;
+
     }
 
     /**

@@ -160,4 +160,11 @@ public class MemberService {
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
     }
+
+    @Transactional
+    public void withDraw(String email){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 email입니다."));
+        member.withDraw();
+    }
 }

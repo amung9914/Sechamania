@@ -85,6 +85,15 @@ public class MemberApiController {
         return new Result(true);
     }
 
+    /**
+     * 회원탈퇴
+     */
+    @GetMapping("/withdraw")
+    public Result<Boolean> withdraw(Principal principal){
+        memberService.withDraw(principal.getName());
+        return new Result(true);
+    }
+
     @Data
     @AllArgsConstructor
     static class Result<T>{

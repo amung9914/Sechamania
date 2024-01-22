@@ -200,7 +200,7 @@ class ArticleServiceTest {
         articleRepository.save(article2);
         articleRepository.save(article3);
 
-        Page<ArticleListDto> dto = articleService.findAllWithPage();
+        Page<ArticleListDto> dto = articleService.findAllWithPage(0);
 
         // then
         Assertions.assertThat(dto.getTotalElements()).isEqualTo(3);

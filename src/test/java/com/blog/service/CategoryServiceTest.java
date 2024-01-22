@@ -32,7 +32,7 @@ class CategoryServiceTest {
         List<Category> all = categoryService.findAll();
 
         // then
-        Assertions.assertThat(all.get(0).getCategoryName()).isEqualTo(category.getCategoryName());
+        Assertions.assertThat(all.get(0).getName()).isEqualTo(category.getName());
     }
 
     @Test
@@ -74,7 +74,7 @@ class CategoryServiceTest {
         List<Category> list = categoryService.findAll();
 
         // then
-        Assertions.assertThat(list.get(0).getCategoryName()).isEqualTo("newName");
+        Assertions.assertThat(list.get(0).getName()).isEqualTo("newName");
     }
 
     @Test
@@ -95,7 +95,7 @@ class CategoryServiceTest {
 
         List<Category> all = categoryService.findAll();
         for (Category category : all) {
-            if(category.getCategoryName().equals("name2")){
+            if(category.getName().equals("name2")){
                 id = category.getId();
             }
         }

@@ -5,6 +5,7 @@ import com.blog.entity.Hashtag;
 import com.blog.repository.ArticleHashtagRepository;
 import com.blog.repository.HashtagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ public class HashtagService {
     private final ArticleHashtagRepository articleHashtagRepository;
 
     public List<Hashtag> findAll(){
-        return hashtagRepository.findAll();
+        return hashtagRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
     }
 
     public void delete(String tagName){

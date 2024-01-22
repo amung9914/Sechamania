@@ -121,7 +121,6 @@ public class ArticleService {
         articleHashtagRepository.saveAll(Arrays.asList(hashtagArr));
     }
 
-
     private void saveHashtags(String[] hashtags) {
         for (String hashtag : hashtags) {
             Optional<Hashtag> tag = hashtagRepository.findByname(hashtag);
@@ -141,11 +140,12 @@ public class ArticleService {
         return articleRepository.findAll();
     }
 
-    public Page<ArticleListDto> findAllWithPage(){
-        PageRequest pageRequest = PageRequest.of(0,10, Sort.by(Sort.Direction.DESC,"id"));
+    public Page<ArticleListDto> findAllWithPage(int page){
+        PageRequest pageRequest = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC,"id"));
         Page<Article> articles = articleRepository.findPage(pageRequest);
          return articles.map(article ->
-                new ArticleListDto(article.getId(), article.getTitle(), article.getMember().getNickname(),article.getCreatedDate()));
+                new ArticleListDto(article.getId(), article.getTitle(), article.getMember().getNickname(),
+                        article.getCreatedDate(),article.getMember().getProfileImg()));
     }
 
     public Article findById(long id){

@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <div layout:fragment="script">
-
+    <script th:src="@{/js/articleMain.js}"></script>
 </div>
 <div layout:fragment="css">
     <style>
@@ -14,26 +14,14 @@
             padding: 20px 0;
             position: fixed;
         }
-        .inner_box{
-            background-color: white;
-            border-radius: 20px;
-            margin: 20px 0;
-        }
-        .logo{
-            margin: 0 12%;
-            text-align: left;
-        }
         .box{
-            margin: 20px 0 0 15%;
+            margin: 20px 0 0 25%
 
         }
 
-        .inner_box div{
-            margin: 5px 0;
-        }
-
-        .category{
-            margin: 200px 0 50px 0;
+        .hashtag{
+            margin: 200px 0 50px 25%;
+            width: 50%;
         }
         .nav button{
             margin : 10px;
@@ -43,14 +31,18 @@
         .notice{
             color: orange;
         }
-        .hashtag {
+        .category {
             cursor: pointer; /* 기본 마우스 포인터 스타일을 클릭(pointer)으로 설정 */
             font-size: 18px;
         }
 
-        .hashtag:hover {
+        .category:hover {
             cursor: pointer; /* 마우스를 올렸을 때의 스타일을 클릭(pointer)으로 변경 */
         }
+        .pagination, .pagination:hover{
+            cursor: pointer;
+        }
+
         .profile_img{
             width:50px;
             height:50px;
@@ -65,44 +57,37 @@
         .date{
             margin: 10px 10px 0 0;
         }
+        .write_nav{
+            margin: 20px 0;
+        }
+        #write_btn{
+            width: 75px;
+            margin: 0;
+        }
+        hr{
+            background-color: #eeeeee;
+            margin: 30px 0;
+        }
     </style>
 </div>
 <div layout:fragment="content">
-    <div class="category">
-        <ul class="nav justify-content-center">
-            <li class="nav-item">
-                <button type="button" class="btn btn-outline-dark btn-sm">공지사항</button>
-            </li>
-            <li class="nav-item">
-                <button type="button" class="btn btn-outline-warning btn-sm">요소2</button>
-            </li>
-            <li class="nav-item">
-                <button type="button" class="btn btn-outline-dark btn-sm">셀프세차장후기</button>
-            </li>
-            <li class="nav-item">
-                <button type="button" class="btn btn-outline-warning btn-sm">요소4</button>
-            </li>
+    <div class="hashtag">
+        <ul class="nav justify-content-center" id="hashtag_nav">
         </ul>
     </div>
     <div class="root">
         <div class="left_nav">
-            <ul class="nav flex-column">
-                <li class="nav-item hashtag">
-                    <p class="nav-link notice">태그</p>
+            <ul class="nav flex-column" id="category_nav">
+                <li class="nav-item write_nav">
+                    <button class="btn btn-dark btn-sm" id="write_btn">글쓰기</button>
                 </li>
-                <li class="nav-item hashtag">
-                    <p class="nav-link">해시태그1</p>
-                </li>
-                <li class="nav-item hashtag">
-                    <p class="nav-link">해시태그2</p>
-                </li>
-                <li class="nav-item hashtag">
-                    <p class="nav-link">해시태그3</p>
+                <li class="nav-item category">
+                    <p class="notice category_p">카테고리</p>
                 </li>
             </ul>
         </div>
         <div class="center">
-            <div class="box w-75 p-3">
+            <div class="box w-50 p-3" id="article_List">
                 <div class="article">
                     <div class="author">
                         <p class="date">24.01.19 관리자</p>
@@ -114,26 +99,26 @@
                         </a>
                     </div>
                 </div>
-                <div class="inner_box w-75 p-3">
-                    <div class="pagenation">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+            </div>
+            <div class="box w-75 p-3">
+                <div class="pagenation">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination" id="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

@@ -10,11 +10,13 @@ public class ArticleListDto {
     private String title;
     private String nickname;
     private LocalDateTime createdTime;
+    private String profileImg;
 
-    public ArticleListDto(Long id, String title, String nickname, LocalDateTime createdTime) {
+    public ArticleListDto(Long id, String title, String nickname, LocalDateTime createdTime, String profileImg) {
         this.id = id;
         this.title = title;
         this.nickname = nickname;
         this.createdTime = createdTime;
+        this.profileImg = profileImg;
     }
 }
