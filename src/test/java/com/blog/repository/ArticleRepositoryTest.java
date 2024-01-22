@@ -33,12 +33,8 @@ class ArticleRepositoryTest {
 
         memberRepository.save(member);
 
-        ArticleImg articleImg = ArticleImg.builder()
-                .path("path")
-                .build();
-
         // when
-        Article newArticle = Article.createArticle("title","content",member,null,articleImg);
+        Article newArticle = Article.createArticle("title","content",member,null);
 
         articleRepository.save(newArticle);
         em.flush();
@@ -50,7 +46,6 @@ class ArticleRepositoryTest {
 
         // then
         org.assertj.core.api.Assertions.assertThat(all.get(0).getTitle()).isEqualTo("title");
-        org.assertj.core.api.Assertions.assertThat(all.get(0).getImg().get(0).getPath()).isEqualTo(articleImg.getPath());
 
     }
 

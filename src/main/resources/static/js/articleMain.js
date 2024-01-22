@@ -161,6 +161,9 @@ function callPage(page){
 
         }
         for (let i = startRange; i <= endRange; i++) {
+            if(i>=response.totalPages){
+                break;
+            }
             if(i===currentPage){
                 newHTML +=  '<li class="page-item"><a class="page-link notice" onclick="callPage('+i+')">'+i+'</a></li>';
             }else{
@@ -190,6 +193,6 @@ function callPage(page){
 function scrollToTop() {
     window.scrollTo({
         top: 0,
-        behavior: 'smooth' // 부드러운 스크롤 효과를 위해 'smooth'를 사용할 수 있습니다.
+        behavior: 'smooth'
     });
 }

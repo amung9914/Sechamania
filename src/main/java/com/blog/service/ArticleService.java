@@ -45,32 +45,6 @@ public class ArticleService {
         return articleRepository.save(newArticle).getId();
     }
 
-    /**
-     * 첨부 이미지를 가진 article 저장.
-     * imgPaths는 String 변수 하나로 던져도 정상동작
-     */
-    @Transactional
-    public Long saveWithImg(String email, AddArticleDto dto, String... imgPaths) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 email입니다"));
-
-        Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("not found:" + dto.getCategoryId()));
-
-        ArticleImg[] imgArr = new ArticleImg[imgPaths.length];
-
-        for (int i = 0; i < imgPaths.length; i++) {
-            ArticleImg articleImg = ArticleImg.builder()
-                    .path(imgPaths[i])
-                    .build();
-            imgArr[i] = articleImg;
-        }
-
-        // when
-        Article newArticle = Article.createArticle(dto.getTitle(), dto.getContent(), member, category, imgArr);
-        return articleRepository.save(newArticle).getId();
-    }
-
     @Transactional
     public void saveWithHashtag(String email, AddArticleDto dto, String[] hashtags){
         Member member = memberRepository.findByEmail(email)
@@ -87,36 +61,6 @@ public class ArticleService {
             hashtagArr[i] = ArticleHashtag.builder().hashtag(findtag).build();
         }
         Article newArticle = Article.createArticleWtihHashtags(dto.getTitle(), dto.getContent(), member, category, hashtagArr);
-        articleRepository.save(newArticle);
-        articleHashtagRepository.saveAll(Arrays.asList(hashtagArr));
-    }
-
-    @Transactional
-    public void saveArticleWithHashtagAndImg(String email, AddArticleDto dto, String[] hashtags,String... imgPaths){
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
-
-        Category category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(()-> new IllegalArgumentException("not found:" + dto.getCategoryId()));
-
-        ArticleHashtag[] hashtagArr = new ArticleHashtag[hashtags.length];
-        saveHashtags(hashtags);
-        for (int i = 0; i < hashtags.length; i++) {
-            Hashtag findtag = hashtagRepository.findByname(hashtags[i])
-                    .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 hashtag"));
-            hashtagArr[i] = ArticleHashtag.builder().hashtag(findtag).build();
-        }
-
-        ArticleImg[] imgArr = new ArticleImg[imgPaths.length];
-
-        for (int i = 0; i < imgPaths.length; i++) {
-            ArticleImg articleImg = ArticleImg.builder()
-                    .path(imgPaths[i])
-                    .build();
-            imgArr[i] = articleImg;
-        }
-
-        Article newArticle = Article.createArticleWithImgAndHashtags(dto.getTitle(), dto.getContent(), member, category, hashtagArr,imgArr);
         articleRepository.save(newArticle);
         articleHashtagRepository.saveAll(Arrays.asList(hashtagArr));
     }
@@ -155,7 +99,7 @@ public class ArticleService {
     /**
      * SPRING SECURITY로 본인인지 권한확인 기능 추가 해주세요
      */
-    public void update(long id, AddArticleDto dto, String[] hashtags,String... imgPaths){
+    public void update(long id, AddArticleDto dto, String[] hashtags){
         Article article = articleRepository.findArticleByArticleId(id);
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(()-> new IllegalArgumentException("not found:" + dto.getCategoryId()));
@@ -183,19 +127,6 @@ public class ArticleService {
             articleHashtagRepository.save(articleHashtag);
         });
         // 해시태그 수정 end
-
-        // 이미지 수정 시작
-        if(imgPaths!=null){
-            ArticleImg[] imgs = new ArticleImg[imgPaths.length];
-
-            for (int i = 0; i < imgs.length; i++) {
-                ArticleImg articleImg = ArticleImg.builder().path(imgPaths[i]).build();
-                imgs[i] = articleImg;
-            }
-            article.changeImg(imgs);
-        }else{
-            article.getImg().clear();
-        }
 
         article.update(dto.getTitle(),dto.getContent(),category);
         articleRepository.save(article);

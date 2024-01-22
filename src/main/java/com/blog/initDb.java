@@ -24,9 +24,9 @@ public class initDb {
         initService.dbInit1();
         initService.dbInit2();
         initService.makeCategories();
-        for (int i = 0; i <100; i++) {
+        //for (int i = 0; i <100; i++) {
             initService.makeArticle();
-        }
+        //}
     }
 
     @Component

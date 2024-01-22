@@ -49,4 +49,14 @@ public class ViewController {
     public String articleMain(){
         return "/article/main";
     }
+
+    @GetMapping("/view/writeArticle")
+    public String articleWrite(){
+        return"/article/write";
+    }
+
+    @GetMapping("/view/article/{id}")
+    public String articleView(){
+        return "/article/view";
+    }
 }

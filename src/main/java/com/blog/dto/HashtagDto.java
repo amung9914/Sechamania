@@ -4,11 +4,11 @@ import lombok.Data;
 
 @Data
 public class HashtagDto {
-    private AddArticleDto dto;
+    private AddArticleDto addArticleDto;
     private String[] hashtags;
 
     public HashtagDto(AddArticleDto dto, String[] hashtags) {
-        this.dto = dto;
+        this.addArticleDto = dto;
         this.hashtags = hashtags;
     }
 

@@ -54,31 +54,6 @@ class ArticleServiceTest {
     }
 
     @Test
-    public void saveWithImg() throws Exception {
-        // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
-
-        memberRepository.save(member);
-        Category category = new Category("name1");
-        categoryService.save(category);
-
-        AddArticleDto addArticleDto = new AddArticleDto("title1", "content1", category.getId());
-
-        // String arr = "img1";
-        String[] arr = {"img1","img2","img3"};
-
-        // when
-        articleService.saveWithImg("member1",addArticleDto,arr);
-        em.flush();
-        em.clear();
-
-        List<Article> list = articleService.findAll();
-
-        // then
-        Assertions.assertThat(list.get(0).getTitle()).isEqualTo("title1");
-    }
-
-    @Test
     public void saveWithHashtags() throws Exception {
         // given
         Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
@@ -102,75 +77,6 @@ class ArticleServiceTest {
         // then
         Assertions.assertThat(list.get(0).getTitle()).isEqualTo("title1");
     }
-
-    @Test
-    public void saveWithHashtagsAndImgs() throws Exception {
-        // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
-
-        memberRepository.save(member);
-        Category category = new Category("name1");
-        categoryService.save(category);
-
-        AddArticleDto addArticleDto = new AddArticleDto("title1", "content1", category.getId());
-
-        // String arr = "img1";
-        String[] arr = {"hash1","hash2","hash3"};
-        String[] arr2 = {"img1","img2","img3"};
-
-        // when
-        articleService.saveArticleWithHashtagAndImg("member1",addArticleDto,arr,arr2);
-        em.flush();
-        em.clear();
-
-        List<Article> list = articleService.findAll();
-        System.out.println("*************************************");
-        Article findArticle = articleService.findById(list.get(0).getId());
-        // then
-        System.out.println("findArticle = " + findArticle.getTitle());
-        for (ArticleHashtag articleHashtag : findArticle.getArticleHashtags()) {
-            System.out.println("Hashtag = " + articleHashtag.getHashtag().getName());
-        }
-        for (ArticleImg articleImg : findArticle.getImg()) {
-            System.out.println("articleImg = " + articleImg.getPath());
-        }
-    }
-
-    @Test
-    public void update() throws Exception {
-        // given
-        Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
-
-        memberRepository.save(member);
-        Category category = new Category("name1");
-        categoryService.save(category);
-
-        AddArticleDto addArticleDto = new AddArticleDto("title1", "content1", category.getId());
-
-        // String arr = "img1";
-        String[] arr = {"hash1","hash2","hash3"};
-        String[] arr2 = {"img1","img2","img3"};
-
-        // when
-        articleService.saveArticleWithHashtagAndImg("member1",addArticleDto,arr,arr2);
-        em.flush();
-        em.clear();
-
-        List<Article> list = articleService.findAll();
-        AddArticleDto newDto = new AddArticleDto("title2", "content2", category.getId());
-
-        String[] newHash = {"hash1","hash2","hash31","hash41"};
-        String[] arr3 = {"img31","img32"};
-
-
-        articleService.update(list.get(0).getId(),newDto,null,null);
-        em.flush();
-        em.clear();
-
-        List<Article> newList = articleService.findAll();
-        Assertions.assertThat(newList.get(0).getTitle()).isEqualTo("title2");
-    }
-
     @Test
     public void findAllByPage() throws Exception {
         // given

@@ -31,22 +31,16 @@ public class Article extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<ArticleImg> img = new ArrayList<>();
-
     @OneToMany(mappedBy = "article")
     @JsonIgnore
     private List<ArticleHashtag> articleHashtags = new ArrayList<>();
 
     @Builder
-    public Article(String title, String content, Member member, Category category, List<ArticleImg> img, List<ArticleHashtag> articleHashtags) {
+    public Article(String title, String content, Member member, Category category,List<ArticleHashtag> articleHashtags) {
         this.title = title;
         this.content = content;
         this.member = member;
         this.category = category;
-        this.img = img;
         this.articleHashtags = articleHashtags;
     }
 
@@ -65,22 +59,17 @@ public class Article extends BaseEntity{
         return article;
     }
 
-    public static Article createArticle(String title, String content, Member member, Category category, ArticleImg... articleImgs) {
+    public static Article createArticle(String title, String content, Member member, Category category) {
         Article article = new Article();
         article.title = title;
         article.content = content;
         article.member = member;
         article.category = category;
-        if(articleImgs!=null){
-            for (ArticleImg articleImg : articleImgs) {
-                article.addArticleImg(articleImg);
-            }
-        }
         return article;
     }
 
     public static Article createArticleWithImgAndHashtags(String title, String content, Member member, Category category,
-                                                          ArticleHashtag[] hashtags, ArticleImg... articleImgs) {
+                                                          ArticleHashtag[] hashtags) {
         Article article = new Article();
         article.title = title;
         article.content = content;
@@ -91,19 +80,10 @@ public class Article extends BaseEntity{
                 article.addHashtag(hashtag);
             }
         }
-        if(articleImgs!=null){
-            for (ArticleImg articleImg : articleImgs) {
-                article.addArticleImg(articleImg);
-            }
-        }
+
         return article;
     }
 
-    // 편의 관계 메서드
-    public void addArticleImg(ArticleImg articleImg){
-        img.add(articleImg);
-        articleImg.connectArticle(this);
-    }
 
     public void addHashtag(ArticleHashtag articleHashtag){
         articleHashtags.add(articleHashtag);
@@ -114,12 +94,5 @@ public class Article extends BaseEntity{
         this.title = title;
         this.content = content;
         this.category = category;
-    }
-
-    public void changeImg(ArticleImg... articleImgs){
-        this.img.clear();
-        for (ArticleImg articleImg : articleImgs) {
-            this.addArticleImg(articleImg);
-        }
     }
 }
