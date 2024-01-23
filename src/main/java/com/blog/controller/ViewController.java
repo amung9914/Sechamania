@@ -50,6 +50,11 @@ public class ViewController {
         return "/article/main";
     }
 
+    @GetMapping("/view/updateArticle/{id}")
+    public String articleUpdate(){
+        return "/article/update";
+    }
+
     @GetMapping("/view/writeArticle")
     public String articleWrite(){
         return"/article/write";

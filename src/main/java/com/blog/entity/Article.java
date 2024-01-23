@@ -31,9 +31,12 @@ public class Article extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<ArticleHashtag> articleHashtags = new ArrayList<>();
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Comment> comments;
 
     @Builder
     public Article(String title, String content, Member member, Category category,List<ArticleHashtag> articleHashtags) {

@@ -32,7 +32,7 @@ public class MemberService {
     public Long join(AddUserRequest dto, MultipartFile file){
 
         String path = null;
-        if(file.isEmpty()){
+        if(file==null){
             path = "img/defaultProfile.jpg";
         }else{
             path = imgUploader.savdImg(file);
@@ -58,7 +58,7 @@ public class MemberService {
     @Transactional
     public Long joinForCompany(AddUserRequest dto,MultipartFile file){
         String path = null;
-        if(file.isEmpty()){
+        if(file==null){
             path = "img/defaultProfile.jpg";
         }else{
             path = imgUploader.savdImg(file);
@@ -115,7 +115,7 @@ public class MemberService {
     public void joinForOauth(OauthSignupRequest request, String email,MultipartFile file) {
 
         String path = null;
-        if(file.isEmpty()){
+        if(file==null){
             path = "img/defaultProfile.jpg";
         }else{
             path = imgUploader.savdImg(file);

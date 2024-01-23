@@ -12,7 +12,8 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query("select a from Article a join fetch a.articleHashtags ah " +
             "join fetch ah.hashtag h " +
-            "join fetch a.category c where a.id =:id")
+            "join fetch a.category c " +
+            "join fetch a.member m where a.id =:id")
     Article findArticleByArticleId(@Param("id") long id);
 
     @Query(value = "select a from Article a left join a.member m",

@@ -34,12 +34,11 @@ public class BookmarkService {
         bookMarkRepository.save(bookmark);
     }
 
-    /**
-     * SPRING SECURITY로 본인인지 권한확인 기능 추가 해주세요
-     */
     @Transactional
-    public void delete(String email, long bookmarkId){
-        bookMarkRepository.deleteById(bookmarkId);
+    public void delete(String email, long articleId){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
+        bookMarkRepository.deleteByMemberAndArticleId(member,articleId);
     }
 
     public List<Bookmark> findAll(String email){

@@ -25,6 +25,7 @@
             border-radius:20px;
             padding:4px;
             box-sizing: border-box;
+            margin: 0 10px 0 0;
         }
         .author{
             display: inline-flex;
@@ -43,37 +44,58 @@
         .comment_section{
             margin: 10px 0;
         }
+        .title_section{
+            display: flex;
+        }
+        #bookmark_img{
+            height: fit-content;
+            cursor: pointer;
+        }
+        #content{
+            margin: 50px 0;
+        }
+        #comment_form{
+            margin: 20px 0;
+        }
+        #new_comment_btn{
+            float: right;
+            margin: 20px;
+        }
     </style>
 </div>
 <div layout:fragment="content">
     <div class="center">
         <div class="w-75 p-3">
             <h5 id="category">카테고리</h5>
-            <div>
+            <div class="title_section">
                 <h2 id="title">제목의 자리입니다</h2>
+                <img id="bookmark_img" src="/img/bookmark.png">
             </div>
             <hr/>
+            <div class="author" id="author_line">
+                <p class="date" id="date&author">24.01.19 김서영</p>
+                <img class="profile_img" id="author_profile" src="/img/defaultProfile.jpg">
+            </div>
             <div id="content"> 본문의 자리입니다</div>
             <div class="hashtag_line" id="hashtag_view">
-                <div class="p_tag">
-                    <p>#태그</p>
-                </div>
-                <div class="p_tag">
-                    <p>#태그</p>
-                </div>
             </div>
             <hr/>
-            <div class="comment_section">
+            <div class="comment_section" id="comment_section">
                 <div class="comment">
                     <div class="author">
                         <img class="profile_img" src="/img/defaultProfile.jpg">
                         <p class="date">관리자 | 24.01.19 </p>
                         <p class="comment_p">수정</p>
                         <p class="comment_p">삭제</p>
+                        <p class="comment_p afterLogin">댓글쓰기</p>
                     </div>
                     <div>댓글 내용입니다</div>
                 </div>
             </div>
+            <form id="comment_form">
+                <textarea class="form-control" id="new_comment" placeholder="여러분의 소중한 댓글을 입력해주세요"></textarea>
+                <button type="button" id="new_comment_btn" class="btn btn-outline-secondary">등록</button>
+            </form>
             <button type="button" class="btn btn-dark" id="back_btn">뒤로</button>
         </div>
     </div>

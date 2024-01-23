@@ -73,8 +73,11 @@ document.addEventListener('DOMContentLoaded',function (){
         let newHTML = "";
 
         for (let i = startRange; i <= endRange; i++) {
+
             if(i===currentPage){
                 newHTML +=  '<li class="page-item"><a class="page-link notice" onclick="callPage('+i+')">'+i+'</a></li>';
+            }else if(i>=response.totalPages){
+                break;
             }else{
                 newHTML +=  '<li class="page-item"><a class="page-link" onclick="callPage('+i+')">'+i+'</a></li>';
             }
@@ -161,11 +164,10 @@ function callPage(page){
 
         }
         for (let i = startRange; i <= endRange; i++) {
-            if(i>=response.totalPages){
-                break;
-            }
             if(i===currentPage){
                 newHTML +=  '<li class="page-item"><a class="page-link notice" onclick="callPage('+i+')">'+i+'</a></li>';
+            }else if(i>=response.totalPages){
+                break;
             }else{
                 newHTML +=  '<li class="page-item"><a class="page-link" onclick="callPage('+i+')">'+i+'</a></li>';
             }

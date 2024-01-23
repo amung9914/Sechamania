@@ -15,12 +15,6 @@ public class HashtagDto {
         this.hashtags = hashtags;
     }
 
-
-    public HashtagDto(Article article) {
-        this.addArticleDto = new AddArticleDto(article.getTitle(), article.getContent(), article.getCategory().getId());
-        this.hashtags = article.getArticleHashtags().stream().map(articleHashtag -> articleHashtag.getHashtag().getName()).toArray(String[]::new);
-    }
-
     /*
     * 클라이언트에서 요청 보낼때 JSON구조
     *

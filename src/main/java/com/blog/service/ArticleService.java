@@ -95,12 +95,15 @@ public class ArticleService {
     public Article findById(long id){
         return articleRepository.findArticleByArticleId(id);
     }
-
-    /**
-     * SPRING SECURITY로 본인인지 권한확인 기능 추가 해주세요
-     */
-    public void update(long id, AddArticleDto dto, String[] hashtags){
+    
+    @Transactional
+    public void update(String email,long id, AddArticleDto dto, String[] hashtags){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
         Article article = articleRepository.findArticleByArticleId(id);
+
+        validateAuthor(member,article);
+
         Category category = categoryRepository.findById(dto.getCategoryId())
                 .orElseThrow(()-> new IllegalArgumentException("not found:" + dto.getCategoryId()));
 
@@ -130,5 +133,21 @@ public class ArticleService {
 
         article.update(dto.getTitle(),dto.getContent(),category);
         articleRepository.save(article);
+    }
+
+    @Transactional
+    public void delete(String email,long articleId){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
+        Article article = articleRepository.findArticleByArticleId(articleId);
+        validateAuthor(member,article);
+
+        articleRepository.deleteById(articleId);
+    }
+
+    private void validateAuthor(Member member,Article article){
+        if(!article.getMember().getEmail().equals(member.getEmail())){
+            throw new IllegalArgumentException("작성자가 아닙니다");
+        }
     }
 }

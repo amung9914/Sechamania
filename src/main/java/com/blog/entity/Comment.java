@@ -1,14 +1,17 @@
 package com.blog.entity;
 
+import com.blog.dto.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity{
     @Id @GeneratedValue
     @Column(name = "comment_id")
@@ -24,15 +27,31 @@ public class Comment extends BaseEntity{
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private int ref; // 원본댓글 저장하여 동일한 ref값일 경우 묶어서 출력할 수 있도록 저장
-    private int lev; // view 화면에서 출력될 답변 글의 깊이
-    private int seq; // 답변글 끼리의 정렬순서
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<Comment> children = new ArrayList<>();
+
+    public Comment() {
+    }
 
     @Builder
     public Comment(String content, Article article, Member member) {
         this.content = content;
         this.article = article;
         this.member = member;
+    }
+
+    public void update(CommentRequestDto commentRequestDto){
+        this.content = commentRequestDto.getContent();
+    }
+
+    // 부모 댓글 수정
+    public void updateParent(Comment parent){
+        this.parent = parent;
     }
 
     public void changeContent(String content){

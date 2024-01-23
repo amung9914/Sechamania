@@ -16,4 +16,6 @@ public interface BookMarkRepository extends JpaRepository<Bookmark, Long> {
     List<Bookmark> findAllByMember(@Param("member")Member member);
 
     Optional<Bookmark> findBookmarkByArticleAndMember(@Param("article") Article article, @Param("member") Member member);
+
+    void deleteByMemberAndArticleId(Member member,long articleId);
 }

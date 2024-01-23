@@ -45,7 +45,7 @@ public class initDb {
                     .nickname("admin")
                     .address(new Address("서울 영등포구 국제금융로 101층","영등포구","37.5251775245928","126.924876706923"))
                     .status(MemberStatus.ACTIVE)
-                    .imgPath("img/defaultProfile.jpg")
+                    .imgPath("/img/defaultProfile.jpg")
                     .build();
             memberRepository.save(newMember);
 
@@ -68,7 +68,7 @@ public class initDb {
                     .nickname("user")
                     .address(new Address("서울 영등포구 국제금융로 101층","영등포구","37.5251775245928","126.924876706923"))
                     .status(MemberStatus.ACTIVE)
-                    .imgPath("img/defaultProfile.jpg")
+                    .imgPath("/img/defaultProfile.jpg")
                     .build();
             memberRepository.save(newMember);
 

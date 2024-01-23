@@ -100,7 +100,7 @@ function make_summary(currentTMP,pty,afterPty){
             if(currentTMP >'1'&& afterPty==='0'){
                 return '오늘은 세차하기 좋은 날이에요';
             }else if(currentTMP <='1'){
-                return '오늘은 차가 얼어버릴 수 있어요';
+                return '오늘은 차를 얼음으로 만들 수 있어요';
             }else{
                 return '세차는 다음에 하는 게 어떨까요?'
             }
