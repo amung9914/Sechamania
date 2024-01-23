@@ -24,6 +24,10 @@ public class Comment extends BaseEntity{
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private int ref; // 원본댓글 저장하여 동일한 ref값일 경우 묶어서 출력할 수 있도록 저장
+    private int lev; // view 화면에서 출력될 답변 글의 깊이
+    private int seq; // 답변글 끼리의 정렬순서
+
     @Builder
     public Comment(String content, Article article, Member member) {
         this.content = content;

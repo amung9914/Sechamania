@@ -1,6 +1,6 @@
 ## 트러블슈팅
 
-### problem 1 : 글을 가져올때 패치조인 오류 발생으로 최적화 불가
+### problem 1 : 글을 가져올때 ArticleImg로 인해 패치조인 오류 발생 및 최적화 불가
 <hr>
 
 글 정보를 한 번에 가져오려고 하자 MultipleBagFetchException이 발생하였습니다.<br>
@@ -15,11 +15,11 @@
 
 1. 배치사이즈 이용 - 쿼리 4번(조인테이블 총 4개),<br>
 2. 패치조인 사용 및 img 따로 객체 그래프 조회 - 쿼리 2번<br>
+3. 패치조인 사용 및 ArticleImg를 엔티티로 관리하지 않는다
 
-### result : 2번째 방법 채택
-리스트 형태로 받아오는게 아니라 <br>
-글을 조회했을때 쿼리가 나가기에 크게 부담이 가지 않을 것으로 예상했습니다.
-
+### result : 3번째 방법 채택
+ArticleImg를 따로 엔티티로 처리하지 않고 Article의 content에 img태그 형태로 보관 & amazon S3에 이미지 파일을 보관하였습니다.
+이를 통해 article 조회 쿼리를 1회로 단축했습니다.
 <hr>
 
 ### problem 2: JWT기반 인증으로 초기화면에서 Thymeleaf sec:authorize 속성 사용 불가
