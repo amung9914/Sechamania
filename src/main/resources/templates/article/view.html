@@ -6,7 +6,6 @@
     <script th:src="@{/js/articleView.js}"></script>
 </div>
 <div layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/summernote/summernote-lite.css}">
     <style>
         .center{
             margin: 100px 16%;
@@ -36,6 +35,8 @@
         .comment_p{
             margin: 10px 10px 0 0;
             cursor: pointer;
+            color: grey;
+            font-size: small;
         }
         .comment{
             padding: 10px;
@@ -61,6 +62,12 @@
             float: right;
             margin: 20px;
         }
+        .blank{
+            padding: 0 20px;
+        }
+        .comment{
+            display: flex;
+        }
     </style>
 </div>
 <div layout:fragment="content">
@@ -82,16 +89,20 @@
             <hr/>
             <div class="comment_section" id="comment_section">
                 <div class="comment">
-                    <div class="author">
-                        <img class="profile_img" src="/img/defaultProfile.jpg">
-                        <p class="date">관리자 | 24.01.19 </p>
-                        <p class="comment_p">수정</p>
-                        <p class="comment_p">삭제</p>
-                        <p class="comment_p afterLogin">댓글쓰기</p>
+                    <div class="blank">&nbsp;</div>
+                    <div class="comment_content">
+                        <div class="author">
+                            <img class="profile_img" src="/img/defaultProfile.jpg">
+                            <p class="date">관리자 | 24.01.19 </p>
+                            <p class="comment_p">수정</p>
+                            <p class="comment_p">삭제</p>
+                            <p class="comment_p afterLogin">댓글쓰기</p>
+                        </div>
+                        <div>댓글 내용입니다</div>
                     </div>
-                    <div>댓글 내용입니다</div>
                 </div>
             </div>
+
             <form id="comment_form">
                 <textarea class="form-control" id="new_comment" placeholder="여러분의 소중한 댓글을 입력해주세요"></textarea>
                 <button type="button" id="new_comment_btn" class="btn btn-outline-secondary">등록</button>

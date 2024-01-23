@@ -6,35 +6,8 @@ let isLogin = localStorage.getItem("access_token");
 if(!isLogin){
     location.replace("/");
 }
+let articleId = null;
 document.addEventListener("DOMContentLoaded", function(){
-    function successForCategory(response){
-        let selectDiv =  document.getElementById("category");
-        let jsonData = response.data;
-        jsonData.forEach(function(data){
-            // 동적으로 li 요소 생성 및 설정
-            let option = document.createElement("option");
-            option.setAttribute("value", data.categoryId);
-            option.innerText = data.name;
-            selectDiv.appendChild(option);
-        });
-    }
-    function failForCategory(){
-        alert("카테고리를 정상적으로 불러올 수 없습니다");
-    }
-    httpRequestWithResponse("GET","/api/category",null,successForCategory,failForCategory);
-    /* 기존 게시글 정보 불러오기 START */
-    function success(response){
-        console.log(response);
-    }
-    function fail(){
-        alert("게시글 정보를 정상적으로 불러올 수 없습니다");
-    }
-
-    httpRequestWtihTokenAndResponse("GET","/article/"+lastPathSegment,null,success,fail);
-
-    /* 기존 게시글 정보 불러오기 END */
-
-
     // summernote
     $(document).ready(function() {
         $('#summernote').summernote({
@@ -61,6 +34,47 @@ document.addEventListener("DOMContentLoaded", function(){
             }
         });
     });
+    function successForCategory(response){
+        let selectDiv =  document.getElementById("category");
+        let jsonData = response.data;
+        jsonData.forEach(function(data){
+            // 동적으로 li 요소 생성 및 설정
+            let option = document.createElement("option");
+            option.setAttribute("value", data.categoryId);
+            option.innerText = data.name;
+            selectDiv.appendChild(option);
+        });
+    }
+    function failForCategory(){
+        alert("카테고리를 정상적으로 불러올 수 없습니다");
+    }
+    httpRequestWithResponse("GET","/api/category",null,successForCategory,failForCategory);
+    /* 기존 게시글 정보 불러오기 START */
+    function success(response){
+        let jsonData = response.data;
+        document.getElementById("category").value = jsonData.categoryId;
+        document.getElementById("title").value = jsonData.title;
+        $('#summernote').summernote('code',jsonData.content);
+        articleId = response.data.articleId;
+
+        let hashtagView = document.getElementById("hashtag_view");
+        let hashtagData = response.data.hashtags;
+        hashtagData.forEach(function (data){
+            let div = document.createElement("div");
+            div.className = "p_tag";
+            div.innerHTML = '#<p>'+data+'</p>' +
+                '<p class="close_btn" onclick="deleteTag(this)">x</p>';
+            hashtagView.appendChild(div);
+        });
+
+    }
+    function fail(){
+        alert("게시글 정보를 정상적으로 불러올 수 없습니다");
+    }
+    httpRequestWtihTokenAndResponse("GET","/article/"+lastPathSegment,null,success,fail);
+    /* 기존 게시글 정보 불러오기 END */
+
+
     let newHashtag = document.getElementById("hashtag");
     newHashtag.addEventListener('keyup',event => handleEnter(event));
 
@@ -71,7 +85,8 @@ document.addEventListener("DOMContentLoaded", function(){
             let view = document.getElementById("hashtag_view");
             let div = document.createElement("div");
             div.className = "p_tag";
-            div.innerHTML = '#<p>'+newHashtag.value+'</p>';
+            div.innerHTML = '#<p>'+newHashtag.value+'</p>' +
+                '<p class="close_btn" onclick="deleteTag(this)">x</p>';
             view.appendChild(div);
             newHashtag.value = "";
         }
@@ -103,16 +118,18 @@ document.addEventListener("DOMContentLoaded", function(){
                     "content":markupStr
                 },
                 "hashtags":hashtags,
+                "articleId":articleId
             })
+
             function success(){
-                alert("게시글 등록이 완료되었습니다.");
-                location.replace("/view/article");
+                alert("게시글 수정이 완료되었습니다.");
+                location.replace("/view/article/"+articleId);
             }
             function fail(){
-                alert("게시글이 정상적으로 작성되지 않았습니다");
+                alert("게시글이 정상적으로 수정되지 않았습니다");
             }
 
-            httpRequestWtihToken("POST","/save/article",body,success,fail)
+            httpRequestWtihToken("POST","/article",body,success,fail)
         }
     });
 })
@@ -133,3 +150,6 @@ function addImg(imgPath){
     $('#summernote').summernote('editor.insertImage',imgPath);
 }
 
+function deleteTag(element){
+    element.parentNode.remove();
+}

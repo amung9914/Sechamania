@@ -3,6 +3,7 @@ package com.blog.controller;
 import com.blog.dto.ArticleListDto;
 import com.blog.dto.ArticleResponseDto;
 import com.blog.dto.HashtagDto;
+import com.blog.dto.UpdateHashtagDto;
 import com.blog.entity.Article;
 import com.blog.service.ArticleService;
 import com.blog.service.BookmarkService;
@@ -70,9 +71,9 @@ public class ArticleApiController {
         }
     }
 
-    @PostMapping("article/{articleId}")
-    public Result update(@PathVariable long articleId, @RequestBody HashtagDto dto, Principal principal){
-        articleService.update(principal.getName(), articleId,dto.getAddArticleDto(), dto.getHashtags());
+    @PostMapping("article")
+    public Result update(@RequestBody UpdateHashtagDto dto, Principal principal){
+        articleService.update(principal.getName(), dto.getArticleId() ,dto.getDto(), dto.getHashtags());
         return new Result(true);
     }
 

@@ -2,14 +2,13 @@ package com.blog.controller;
 
 import com.blog.dto.CommentRequestDto;
 import com.blog.dto.CommentResponseDto;
+import com.blog.entity.Member;
 import com.blog.service.CommentService;
+import com.blog.service.MemberService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -19,15 +18,22 @@ import java.util.List;
 public class CommentApiController {
 
     private final CommentService commentService;
+    private final MemberService memberService;
 
     @GetMapping("/api/comment/{articleId}")
-    public Result findComment(@PathVariable long articleId){
+    public ResultWithAuthor findComment(@PathVariable long articleId, Principal principal){
         List<CommentResponseDto> list = commentService.getAllCommentsByArticle(articleId);
-        return new Result(list);
+
+        if(principal!=null){
+            Member member = memberService.findByEmail(principal.getName());
+            return new ResultWithAuthor(list,member.getNickname());
+        }else{
+            return new ResultWithAuthor(list,null);
+        }
     }
 
     @PostMapping("save/comment")
-    public Result saveComment(CommentRequestDto dto, Principal principal){
+    public Result saveComment(@RequestBody CommentRequestDto dto, Principal principal){
         Long id = commentService.createComment(dto, principal.getName());
         return new Result(id);
     }
@@ -36,5 +42,12 @@ public class CommentApiController {
     @AllArgsConstructor
     static public class Result<T>{
         private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static public class ResultWithAuthor<T>{
+        private T data;
+        private T nickname;
     }
 }

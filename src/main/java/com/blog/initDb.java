@@ -1,16 +1,20 @@
 package com.blog;
 
 import com.blog.dto.AddArticleDto;
+import com.blog.dto.CommentRequestDto;
 import com.blog.entity.*;
 import com.blog.repository.AuthorityRepository;
 import com.blog.repository.MemberRepository;
 import com.blog.service.ArticleService;
 import com.blog.service.CategoryService;
+import com.blog.service.CommentService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +31,8 @@ public class initDb {
         //for (int i = 0; i <100; i++) {
             initService.makeArticle();
         //}
+        initService.makeComment();
+
     }
 
     @Component
@@ -37,6 +43,7 @@ public class initDb {
         private final AuthorityRepository authorityRepository;
         private final CategoryService categoryService;
         private final ArticleService articleService;
+        private final CommentService commentService;
 
         public void dbInit1(){
             Member newMember = Member.builder()
@@ -108,6 +115,17 @@ public class initDb {
             AddArticleDto addArticleDto2 = new AddArticleDto("오늘 진짜 춥네요", "낮인데 영하 7도네요", category.getId());
             String[] arr2 = {"날씨","영하","눈소식","눈소식1","눈소식2","눈소식3","눈소식4","눈소식5",};
             articleService.saveWithHashtag("user@user.com",addArticleDto2,arr2);
+        }
+        public void makeComment(){
+            List<Article> all = articleService.findAll();
+            // given
+            CommentRequestDto dto1 = new CommentRequestDto("댓글1", all.get(0).getId(), null);
+            // when
+            Long id = commentService.createComment(dto1, "admin@admin.com");
+            CommentRequestDto dto2 = new CommentRequestDto("답글1", all.get(0).getId(), id);
+            Long id2 = commentService.createComment(dto2, "admin@admin.com");
+            CommentRequestDto dto3 = new CommentRequestDto("답글1의 답글1", all.get(0).getId(), id2);
+            commentService.createComment(dto3, "admin@admin.com");
         }
     }
 }

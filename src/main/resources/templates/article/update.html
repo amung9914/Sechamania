@@ -40,6 +40,10 @@
             display: inline-flex;
             margin: 10px;
         }
+        .close_btn{
+            margin: 0 5px;
+            cursor: pointer;
+        }
     </style>
 </div>
 <div layout:fragment="content">
@@ -47,19 +51,12 @@
         <div class="w-75 p-3">
             <form id="write_article_form">
                 <select class="form-select form-select-sm" id="category" aria-label="Small select example">
-                    <option selected>카테고리</option>
                 </select>
                 <div>
                     <input type="text" class="write_title" id="title" placeholder="제목을 입력하세요">
                 </div>
                 <textarea id="summernote" name="editordata"></textarea>
                 <div class="hashtag_line" id="hashtag_view">
-                    <!--<div class="p_tag">
-                        #<p>태그입력</p>
-                    </div>
-                    <div class="p_tag">
-                        #<p>태그입력</p>
-                    </div>-->
                     <div class="input_tag">
                         #<input type="text" class="input_hashtag" id="hashtag" placeholder="태그입력">
                     </div>

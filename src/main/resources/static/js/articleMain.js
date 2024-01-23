@@ -112,8 +112,8 @@ function transDate(data){
     let year = date.getFullYear().toString().substr(-2);
     let month = ("0" + (date.getMonth() + 1)).slice(-2);
     let day = ("0" + date.getDate()).slice(-2);
-    let hour = ("0" + (date.getHours() + 1)).slice(-2);
-    let min = ("0" + (date.getMinutes() + 1)).slice(-2);
+    let hour = ("0" + (date.getHours())).slice(-2);
+    let min = ("0" + (date.getMinutes())).slice(-2);
 
 // 변환된 형식으로 조합
     let formattedDate = year + "." + month + "." + day +" "+hour+"시 "+min+"분";

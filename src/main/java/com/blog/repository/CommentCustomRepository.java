@@ -19,7 +19,7 @@ public class CommentCustomRepository {
     public List<Comment> findAllByArticle(Article article){
         return jpaQueryFactory.selectFrom(comment)
                 .leftJoin(comment.parent)
-                .fetchJoin()
+                .join(comment.member)
                 .where(comment.article.id.eq(article.getId()))
                 .orderBy(comment.parent.id.asc().nullsFirst(), comment.createdDate.asc())
                 .fetch();

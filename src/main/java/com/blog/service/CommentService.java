@@ -80,7 +80,7 @@ public class CommentService {
             if(c.getParent()!=null)
                 map.get(c.getParent().getId()).getChildren().add(cdto);
             //최상위댓글이면 바로 리스트에 추가한다
-            dtoList.add(cdto);
+            else dtoList.add(cdto);
         });
         return dtoList;
     }

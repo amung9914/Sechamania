@@ -1,18 +1,19 @@
 package com.blog.dto;
 
-import com.blog.entity.Article;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class HashtagDto {
-    private AddArticleDto addArticleDto;
+public class UpdateHashtagDto {
+    private AddArticleDto dto;
     private String[] hashtags;
+    private long articleId;
 
-    public HashtagDto(AddArticleDto addArticleDto, String[] hashtags) {
-        this.addArticleDto = addArticleDto;
+    public UpdateHashtagDto(AddArticleDto dto, String[] hashtags, long articleId) {
+        this.dto = dto;
         this.hashtags = hashtags;
+        this.articleId = articleId;
     }
 
     /*

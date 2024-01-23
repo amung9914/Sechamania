@@ -54,7 +54,8 @@ document.addEventListener("DOMContentLoaded", function(){
             let view = document.getElementById("hashtag_view");
             let div = document.createElement("div");
             div.className = "p_tag";
-            div.innerHTML = '#<p>'+newHashtag.value+'</p>';
+            div.innerHTML = '#<p>'+newHashtag.value+'</p>' +
+                '<p class="close_btn" onclick="deleteTag(this)">x</p>';
             view.appendChild(div);
             newHashtag.value = "";
         }
@@ -80,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function(){
             }
 
             let body = JSON.stringify({
-                "dto":{
+                "addArticleDto":{
                     "categoryId":document.getElementById("category").value,
                     "title": document.getElementById("title").value,
                     "content":markupStr
@@ -114,5 +115,9 @@ function imageUpload(file){
 
 function addImg(imgPath){
     $('#summernote').summernote('editor.insertImage',imgPath);
+}
+
+function deleteTag(element){
+    element.parentNode.remove();
 }
 
