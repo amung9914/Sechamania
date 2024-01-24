@@ -49,8 +49,7 @@ document.addEventListener("DOMContentLoaded", function(){
     }
     /* 게시글 로딩 END */
 
-    /* 댓글 로딩 START */
-
+    /* 댓글 로딩 START - renderComment 함수와 연결 */
     function successForComment(response){
         console.log(response);
         userNickname = response.nickname;
@@ -61,14 +60,12 @@ document.addEventListener("DOMContentLoaded", function(){
         console.log("댓글로딩실패");
     }
     if(isLogin){
+        document.getElementById("comment_form").style.display = 'block';
         httpRequestWtihTokenAndResponse("GET","/api/comment/"+lastPathSegment,null,successForComment,failForComment);
     }else{
         httpRequestWithResponse("GET","/api/comment/"+lastPathSegment,null,successForComment,failForComment);
     }
-
-
-
-
+    /* 댓글 로딩 END */
 
     /* 북마크 클릭 이벤트 START */
     let bookmark = document.getElementById("bookmark_img");
@@ -95,7 +92,31 @@ document.addEventListener("DOMContentLoaded", function(){
        }
     }); /* 북마크 클릭 이벤트 END */
 
-});
+    /* 댓글 추가 */
+    document.getElementById("comment_form").addEventListener('submit',function (event){
+        event.preventDefault();
+        let newComment = document.getElementById("new_comment");
+        if(newComment.value!==""){
+            let body = JSON.stringify({
+                "content": newComment.value,
+                "articleId": articleId
+            })
+            function success(){
+                location.replace("/view/article/"+articleId);
+            }
+            function fail(){
+                alert("댓글이 정상적으로 등록되지 않았습니다");
+            }
+            httpRequestWtihToken("POST","/save/comment",body,success,fail);
+        }
+    });
+
+    // 뒤로 가기
+    document.getElementById("back_btn").addEventListener('click',function () {
+        window.history.back();
+    })
+
+}); // END DOMLoaded
 
 
 function transDate(data){
@@ -133,27 +154,6 @@ function isValidDeleteBtn(){
     }
 }
 
-function renderComment(data){
-    let commentSection = document.getElementById("comment_section");
-    let div = document.createElement("div");
-    div.className = "comment";
-    div.innerHTML = '<div class="comment_content">\n' +
-        '                        <div class="author">\n' +
-        '                            <img class="profile_img" src="/img/defaultProfile.jpg">\n' +
-        '                            <p class="date">관리자 | 24.01.19 </p>\n' +
-        '                            <p class="comment_p">수정</p>\n' +
-        '                            <p class="comment_p">삭제</p>\n' +
-        '                            <p class="comment_p afterLogin">댓글쓰기</p>\n' +
-        '                        </div>\n' +
-        '                        <div>댓글 내용입니다</div>\n' +
-        '                    </div>';
-    commentSection.appendChild(div);
-    if(data.children!=null){
-        data.children.forEach(
-            comment(data.children)
-        )
-    }
-}
 
 /**
  * jsonData, 반복횟수 전달함(댓글 깊이 계산)
@@ -163,7 +163,7 @@ function renderComment(jsonData,count){
     jsonData.forEach(function (data) {
         let root = document.createElement("div");
         root.className = "comment";
-        if(count>0){
+        if(data.parentId!=null){
             for(let i=0; i<count;i++){
                 let countDiv = document.createElement('div');
                 countDiv.className = "blank";
@@ -173,28 +173,120 @@ function renderComment(jsonData,count){
         }
         let div = document.createElement("div");
         div.className = "comment_content";
+        div.id = data.commentId;
         div.innerHTML = '                        <div class="author">' +
             '                            <img class="profile_img" src="'+data.profileImg+'">' +
             '                            <p class="date">'+data.author+' | '+transDate(data.createdTime)+'</p>'+
             '                        </div>' +
-            '                        <div>'+data.content+'</div>';
+            '                        <div id="content'+data.commentId+'">'+data.content+'</div>';
 
         if(userNickname!==null){
             let div2 = document.createElement("div");
             div2.className = "author";
-            div2.innerHTML = '<p class="comment_p">댓글쓰기</p>';
+            div2.innerHTML = '<p class="comment_p" onclick="addChild(this)">댓글쓰기</p>';
             if(userNickname===data.author){
-                div2.innerHTML +='<p class="comment_p">수정</p>' +
-                    '           <p class="comment_p">삭제</p>';
+                div2.innerHTML +='<p class="comment_p" onclick="openUpdate(this)">수정</p>' +
+                    '           <p class="comment_p" onclick="deleteComment(this)">삭제</p>';
             }
             div.appendChild(div2);
         }
 
         root.appendChild(div);
         commentSection.appendChild(root);
-        if(data.children !=null){
+        if(data.children.length>0){
             count +=1;
             renderComment(data.children,count);
         }
+    });
+}
+
+/**
+ * 댓글 수정
+ */
+function openUpdate(element){
+    let targetDiv = element.parentElement.parentElement;
+    let commentId = targetDiv.id;
+    let previousValue = document.getElementById("content"+commentId).innerText;
+    let textarea = document.createElement("textarea");
+    textarea.className = "comment_text";
+    textarea.id = "update_comment";
+    textarea.value = previousValue;
+    let button = document.createElement("button");
+    button.className = "btn btn-outline-secondary";
+    button.id = "update_btn";
+    button.innerText = "등록";
+
+    button.addEventListener('click',function (){
+        let body = JSON.stringify({
+            "commentId": commentId,
+            "content": document.getElementById("update_comment").value
+        })
+        function success(){
+            location.replace("/view/article/"+articleId);
+        }
+        function fail(){
+            alert("댓글 수정이 정상적으로 처리되지 않았습니다");
+        }
+        httpRequestWtihToken("POST","/update/comment",body,success,fail);
     })
+
+    targetDiv.appendChild(textarea);
+    targetDiv.appendChild(button);
+
+}
+
+/**
+ * 댓글 삭제
+ */
+function deleteComment(element){
+    let targetDiv = element.parentElement.parentElement;
+    let commentId = targetDiv.id;
+
+    let isConfirmed = confirm("댓글을 삭제하시겠습니까?");
+    if(isConfirmed){
+        function success(){
+            alert("삭제가 완료되었습니다");
+            location.replace("/view/article/"+articleId);
+        }
+        function fail(){
+            alert("삭제가 정상적으로 완료되지 않았습니다");
+        }
+        httpRequestWtihToken("DELETE","/comment/"+commentId,null,success,fail);
+
+    }
+}
+
+/**
+ * 답글을 등록하는 함수
+ */
+function addChild(element){
+    let targetDiv = element.parentElement.parentElement;
+    let commentId = targetDiv.id;
+    let textarea = document.createElement("textarea");
+    textarea.className = "comment_text";
+    textarea.id = "child_comment";
+    textarea.placeholder = "여러분의 소중한 댓글을 입력해주세요";
+    let button = document.createElement("button");
+    button.className = "btn btn-outline-secondary";
+    button.id = "child_btn";
+    button.innerText = "등록";
+
+    button.addEventListener('click',function (){
+        let body = JSON.stringify({
+            "parentId": commentId,
+            "content": document.getElementById("child_comment").value,
+            "articleId": articleId
+        })
+        function success(){
+            location.replace("/view/article/"+articleId);
+        }
+        function fail(){
+            alert("댓글 등록이 정상적으로 처리되지 않았습니다");
+        }
+        httpRequestWtihToken("POST","/save/comment",body,success,fail);
+    })
+
+    targetDiv.appendChild(textarea);
+    targetDiv.appendChild(button);
+
 }

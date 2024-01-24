@@ -32,10 +32,22 @@ public class CommentApiController {
         }
     }
 
+    @PostMapping("update/comment")
+    public Result updateComment(Principal principal, @RequestBody CommentUpdateDto dto){
+        commentService.updateComment(principal.getName(),dto.getCommentId(),dto.getContent());
+        return new Result(true);
+    }
+
     @PostMapping("save/comment")
     public Result saveComment(@RequestBody CommentRequestDto dto, Principal principal){
         Long id = commentService.createComment(dto, principal.getName());
         return new Result(id);
+    }
+
+    @DeleteMapping("comment/{commentId}")
+    public Result delete(Principal principal, @PathVariable long commentId){
+        commentService.delete(commentId, principal.getName());
+        return new Result(true);
     }
 
     @Data
@@ -49,5 +61,12 @@ public class CommentApiController {
     static public class ResultWithAuthor<T>{
         private T data;
         private T nickname;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static private class CommentUpdateDto {
+        String content;
+        long commentId;
     }
 }

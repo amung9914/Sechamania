@@ -68,6 +68,22 @@
         .comment{
             display: flex;
         }
+        #update_comment, #child_comment{
+            margin: 10px;
+        }
+        .comment_text{
+            width: -webkit-fill-available;
+            border: 2px solid #EEEEEE;
+            border-radius: 15px;
+            height: 80px;
+            padding: 10px;
+        }
+        .comment_content{
+            width: -webkit-fill-available;
+        }
+        #comment_form{
+            display: none;
+        }
     </style>
 </div>
 <div layout:fragment="content">
@@ -102,10 +118,9 @@
                     </div>
                 </div>
             </div>
-
             <form id="comment_form">
-                <textarea class="form-control" id="new_comment" placeholder="여러분의 소중한 댓글을 입력해주세요"></textarea>
-                <button type="button" id="new_comment_btn" class="btn btn-outline-secondary">등록</button>
+                <textarea class="comment_text" id="new_comment" placeholder="여러분의 소중한 댓글을 입력해주세요"></textarea>
+                <button type="submit" id="new_comment_btn" class="btn btn-outline-secondary">등록</button>
             </form>
             <button type="button" class="btn btn-dark" id="back_btn">뒤로</button>
         </div>
