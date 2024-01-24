@@ -26,7 +26,6 @@ public class ArticleService {
     private final HashtagRepository hashtagRepository;
     private final ArticleHashtagRepository articleHashtagRepository;
 
-
     @Transactional
     public Long save(String email, AddArticleDto dto){
         Member member = memberRepository.findByEmail(email)
@@ -111,15 +110,27 @@ public class ArticleService {
     }
 
     public Article findById(long id){
-        System.out.println("****************조회시작***************");
-        return articleRepository.findArticleByArticleId(id);
+        List<ArticleHashtag> articleHashtagList = articleHashtagRepository.findAllByArticleId(id);
+        // N+1방지 작업
+        if(articleHashtagList.isEmpty()){
+            return articleRepository.findArticleWithoutLeftJoinById(id);
+        }else{
+            return articleRepository.findArticleById(id);
+        }
     }
     
     @Transactional
     public void update(String email,long id, AddArticleDto dto, String[] hashtags){
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
-        Article article = articleRepository.findArticleByArticleId(id);
+        Article article = null;
+        List<ArticleHashtag> articleHashtagList = articleHashtagRepository.findAllByArticleId(id);
+        // N+1방지 작업
+        if(articleHashtagList.isEmpty()){
+            article = articleRepository.findArticleWithoutLeftJoinById(id);
+        }else{
+            article =  articleRepository.findArticleById(id);
+        }
 
         validateAuthor(member,article);
 
@@ -139,11 +150,12 @@ public class ArticleService {
         }
 
         newHashtags.removeAll(existingHashtags);
+        Article finalArticle = article;
         newHashtags.forEach(hashtag -> {
             saveHashtag(hashtag);
             Hashtag newHashtag = hashtagRepository.findByname(hashtag)
                     .orElseThrow(()-> new IllegalArgumentException("newHashtag 저장실패"));
-            ArticleHashtag articleHashtag = ArticleHashtag.builder().article(article)
+            ArticleHashtag articleHashtag = ArticleHashtag.builder().article(finalArticle)
                     .hashtag(newHashtag)
                     .build();
             articleHashtagRepository.save(articleHashtag);
@@ -155,13 +167,20 @@ public class ArticleService {
     }
 
     @Transactional
-    public void delete(String email,long articleId){
+    public void delete(String email,long id){
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
-        Article article = articleRepository.findArticleByArticleId(articleId);
+        Article article = null;
+        List<ArticleHashtag> articleHashtagList = articleHashtagRepository.findAllByArticleId(id);
+        // N+1방지 작업
+        if(articleHashtagList.isEmpty()){
+            article = articleRepository.findArticleWithoutLeftJoinById(id);
+        }else{
+            article =  articleRepository.findArticleById(id);
+        }
         validateAuthor(member,article);
 
-        articleRepository.deleteById(articleId);
+        articleRepository.deleteById(id);
     }
 
     private void validateAuthor(Member member,Article article){
