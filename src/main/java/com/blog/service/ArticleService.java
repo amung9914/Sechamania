@@ -85,14 +85,33 @@ public class ArticleService {
     }
 
     public Page<ArticleListDto> findAllWithPage(int page){
-        PageRequest pageRequest = PageRequest.of(page,10, Sort.by(Sort.Direction.DESC,"id"));
+        PageRequest pageRequest = PageRequest.of(page,5, Sort.by(Sort.Direction.DESC,"id"));
         Page<Article> articles = articleRepository.findPage(pageRequest);
          return articles.map(article ->
                 new ArticleListDto(article.getId(), article.getTitle(), article.getMember().getNickname(),
-                        article.getCreatedDate(),article.getMember().getProfileImg()));
+                        article.getCategory().getName(),article.getCreatedDate(),article.getMember().getProfileImg()));
+    }
+
+    public Page<ArticleListDto> findPageForNotice(int page){
+        PageRequest pageRequest = PageRequest.of(page,5, Sort.by(Sort.Direction.DESC,"id"));
+        Page<Article> articles = articleRepository.findPageForNotice(pageRequest,"공지사항");
+        return articles.map(article ->
+                new ArticleListDto(article.getId(), article.getTitle(), article.getMember().getNickname(),
+                        article.getCategory().getName(),article.getCreatedDate(),article.getMember().getProfileImg()));
+    }
+
+    public Page<ArticleListDto> findMyArticle(int page,String email){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
+        PageRequest pageRequest = PageRequest.of(page,5, Sort.by(Sort.Direction.DESC,"id"));
+        Page<Article> articles = articleRepository.findMyArticles(pageRequest,member.getId());
+        return articles.map(article ->
+                new ArticleListDto(article.getId(), article.getTitle(), article.getMember().getNickname(),
+                        article.getCategory().getName(),article.getCreatedDate(),article.getMember().getProfileImg()));
     }
 
     public Article findById(long id){
+        System.out.println("****************조회시작***************");
         return articleRepository.findArticleByArticleId(id);
     }
     

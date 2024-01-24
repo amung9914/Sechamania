@@ -35,6 +35,54 @@ public class ArticleApiController {
         return articleService.findAllWithPage(page);
     }
 
+    /**
+     * 북마크되어있는 article만 조회하는 api
+     */
+    @GetMapping("articleByBookmark")
+    public Page<ArticleListDto> getArticleListByBookmark(Principal principal){
+        return bookmarkService.findAllForBookmark(0, principal.getName());
+    }
+
+    /**
+     * 북마크되어있는 article만 조회하는 api
+     */
+    @GetMapping("articleByBookmark/{page}")
+    public Page<ArticleListDto> getArticleListByBookmarkWithPage(@PathVariable int page,Principal principal){
+        return bookmarkService.findAllForBookmark(page, principal.getName());
+    }
+
+    /**
+     * 자신의 article만 조회하는 api
+     */
+    @GetMapping("myArticle")
+    public Page<ArticleListDto> getMyArticle(Principal principal){
+        return articleService.findMyArticle(0, principal.getName());
+    }
+
+    /**
+     * 자신의 article만 조회하는 api
+     */
+    @GetMapping("myArticle/{page}")
+    public Page<ArticleListDto> getMyArticleWithPage(@PathVariable int page,Principal principal){
+        return articleService.findMyArticle(page, principal.getName());
+    }
+
+    /**
+     * 공지사항만 조회하는 api
+     */
+    @GetMapping("api/notice")
+    public Page<ArticleListDto> getNotice(){
+        return articleService.findPageForNotice(0);
+    }
+
+    /**
+     * 공지사항만 조회하는 api
+     */
+    @GetMapping("api/notice/{page}")
+    public Page<ArticleListDto> getNoticeWithPage(@PathVariable int page){
+        return articleService.findPageForNotice(page);
+    }
+
     @PostMapping("save/articleImage")
     public Result<String> uploadImage(@RequestParam MultipartFile file){
         System.out.println(file);
@@ -70,6 +118,8 @@ public class ArticleApiController {
             return new ResultArticle(new ArticleResponseDto(findArticle),false,false);
         }
     }
+
+
 
     @PostMapping("article")
     public Result update(@RequestBody UpdateHashtagDto dto, Principal principal){

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //기본정보 불러옴
     function success(response) {
-        document.getElementById("profile_img").src = "/"+response.data.imgPath;
+        document.getElementById("profile_img").src = response.data.imgPath;
         document.getElementById("before_update_nickname").innerText = response.data.nickname;
         document.getElementById("nickname").value = response.data.nickname;
         document.getElementById("findAddr").value = response.data.fullAddress;

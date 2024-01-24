@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<div layout:fragment="script">
+    <script th:src="@{/js/myArticle.js}"></script>
+</div>
+<div layout:fragment="css">
+    <style>
+        body{
+            background-color: #F7F8F9FF;
+        }
+        .left_nav{
+            background-color: white;
+            float: left;
+            margin: 30px 0 0 15%;
+            border-radius: 20px;
+            border: 1px solid #eeeeee;
+            padding: 20px 0;
+        }
+        .center{
+            display: grid;
+            text-align: -webkit-center;;
+        }
+        .inner_box{
+            background-color: white;
+            border-radius: 20px;
+            border: 1px solid #eeeeee;
+            margin: 20px 0 20px 12%;
+            padding: 10px;
+        }
+        .logo{
+            margin: 0 12%;
+            text-align: left;
+        }
+        .box{
+            margin: 20px;
+
+        }
+        .inner_box div{
+            margin: 5px 0;
+        }
+
+        .notice{
+            color: orange;
+        }
+        .pagination, .pagination:hover{
+            cursor: pointer;
+        }
+
+        .profile_img{
+            width:50px;
+            height:50px;
+            bottom:5px;
+            border-radius:20px;
+            padding:4px;
+            box-sizing: border-box;
+        }
+        .author{
+            display: inline-flex;
+        }
+        .date{
+            margin: 10px 10px 0 0;
+        }
+        hr{
+             background-color: #eeeeee;
+             margin: 30px 0;
+         }
+
+    </style>
+</div>
+<div layout:fragment="content">
+    <div class="root">
+        <div class="left_nav">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/view/mypage}">계정관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/view/bookmark}">북마크</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/view/myArticle}">작성한 글</a>
+                </li>
+            </ul>
+        </div>
+        <div class="center">
+            <div class="box w-75 p-3">
+                <div class="logo">
+                    <h3>작성한 글 목록</h3>
+                </div>
+                <div class="inner_box">
+                    <div id="article_List">
+                    </div>
+                    <div class="pagenation">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination" id="pagination">
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

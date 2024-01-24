@@ -64,4 +64,19 @@ public class ViewController {
     public String articleView(){
         return "/article/view";
     }
+
+    @GetMapping("/view/bookmark")
+    public String bookmarkList(){
+        return "/user/bookmark";
+    }
+
+    @GetMapping("/view/myArticle")
+    public String myArticleList(){
+        return "/user/myArticle";
+    }
+
+    @GetMapping("/view/notice")
+    public String noticeList(){
+        return "/article/notice";
+    }
 }

@@ -23,17 +23,19 @@ document.addEventListener('DOMContentLoaded',function (){
         const categoryNav =  document.getElementById("category_nav");
         let jsonData = response.data;
         jsonData.forEach(function(data){
-            // 동적으로 li 요소 생성 및 설정
-            var li = document.createElement("li");
-            li.className = "nav-item category";
-            li.setAttribute("data-user-id", data.categoryId);
+            if(data.name!=="공지사항"){
+                // 동적으로 li 요소 생성 및 설정
+                var li = document.createElement("li");
+                li.className = "nav-item category";
+                li.setAttribute("data-user-id", data.categoryId);
 
-            var paragraph = document.createElement("p");
-            paragraph.textContent = data.name;
+                var paragraph = document.createElement("p");
+                paragraph.textContent = data.name;
 
-            // li에 paragraph를 자식 요소로 추가
-            li.appendChild(paragraph);
-            categoryNav.appendChild(li);
+                // li에 paragraph를 자식 요소로 추가
+                li.appendChild(paragraph);
+                categoryNav.appendChild(li);
+            }
         });
     }
     function failForCategory(){
@@ -46,22 +48,23 @@ document.addEventListener('DOMContentLoaded',function (){
         let articleList = document.getElementById("article_List");
         let content = response.content;
         content.forEach(function(data){
-
-           let div = document.createElement("div");
-           div.className = "article";
-           div.innerHTML = '<div class="author">' +
-               '                        <p class="date">'+transDate(data.createdTime)+' '+data.nickname+'</p>' +
-               '                        <img class="profile_img" src="'+data.profileImg+'">' +
-               '                    </div>' +
-               '                    <div>' +
-               '                        <h2>' +
-               '                          <a href="/view/article/'+data.id+'">' +
-               '                                '+data.title+
-               '                            </a>' +
-               '                       </h2>' +
-               '                       <hr/>' +
-            '                      </div>';
-           articleList.appendChild(div);
+            if(data.categoryName!=="공지사항"){
+               let div = document.createElement("div");
+               div.className = "article";
+               div.innerHTML = '<div class="author">' +
+                   '                        <p class="date">'+transDate(data.createdTime)+' '+data.nickname+'</p>' +
+                   '                        <img class="profile_img" src="'+data.profileImg+'">' +
+                   '                    </div>' +
+                   '                    <div>' +
+                   '                        <h2>' +
+                   '                          <a href="/view/article/'+data.id+'">' +
+                   '                                '+data.title+
+                   '                            </a>' +
+                   '                       </h2>' +
+                   '                       <hr/>' +
+                '                      </div>';
+               articleList.appendChild(div);
+            }
         });
 
         let currentPage = response.number+1;

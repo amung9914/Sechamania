@@ -1,5 +1,6 @@
 package com.blog.service;
 
+import com.blog.dto.ArticleListDto;
 import com.blog.entity.Article;
 import com.blog.entity.Bookmark;
 import com.blog.entity.Member;
@@ -7,6 +8,9 @@ import com.blog.repository.ArticleRepository;
 import com.blog.repository.BookMarkRepository;
 import com.blog.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,5 +61,15 @@ public class BookmarkService {
                 .orElseThrow(()-> new IllegalArgumentException("not found article:"+ articleId));
         Optional<Bookmark> bookmark = bookMarkRepository.findBookmarkByArticleAndMember(article, member);
         return bookmark.isPresent();
+    }
+
+    public Page<ArticleListDto> findAllForBookmark(int page,String email){
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
+        PageRequest pageRequest = PageRequest.of(page,5, Sort.by(Sort.Direction.DESC,"id"));
+        Page<Bookmark> bookmarks = bookMarkRepository.findPage(pageRequest, member.getId());
+        return bookmarks.map(bookmark ->
+                new ArticleListDto(bookmark.getArticle().getId(), bookmark.getArticle().getTitle(), bookmark.getArticle().getMember().getNickname(),
+                        bookmark.getArticle().getCategory().getName(),bookmark.getArticle().getCreatedDate(),bookmark.getArticle().getMember().getProfileImg()));
     }
 }
