@@ -54,7 +54,7 @@ public class SecurityConfig {
                                 "/mail","/test/**","/signup","/signup/**","/view/**","/tempimg/**"
                         ,"api/**").permitAll()
                         .requestMatchers(RESOURCE).permitAll()
-                        .requestMatchers("admin","/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout

@@ -1,13 +1,21 @@
 package com.blog.controller;
 
+import com.blog.entity.Referer;
+import com.blog.repository.RefererRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class ViewController {
+    private final RefererRepository refererRepository;
     @GetMapping("/")
-    public String root(){ return "home";}
+    public String root(){
+        return "home";
+    }
 
     @GetMapping("/test")
     public String imgtest(){
@@ -33,11 +41,6 @@ public class ViewController {
     @GetMapping("/signup/oauth2")
     public String signupByOauth2(){
         return "/user/oauthSignup";
-    }
-
-    @GetMapping("/view/admin")
-    public String admin(){
-        return "/admin/admin";
     }
 
     @GetMapping("/view/mypage")
@@ -78,5 +81,15 @@ public class ViewController {
     @GetMapping("/view/notice")
     public String noticeList(){
         return "/article/notice";
+    }
+
+    @GetMapping("/view/admin")
+    public String adminMain(){
+        return "/admin/main";
+    }
+
+    @GetMapping("/view/admin/category")
+    public String adminCategory(){
+        return "/admin/category";
     }
 }
