@@ -18,12 +18,16 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public Long save(Category category){
-        return categoryRepository.save(category).getId();
+    public Long save(String name){
+        Optional<Category> findCategory = categoryRepository.findCategoryByName(name);
+        if(findCategory.isPresent()){
+            throw new IllegalArgumentException("이미 사용중인 카테고리입니다");
+        }
+        return categoryRepository.save(new Category(name)).getId();
     }
 
     public List<Category> findAll(){
-        return categoryRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
+        return categoryRepository.findAll(Sort.by(Sort.Direction.ASC,"name"));
     }
 
     @Transactional

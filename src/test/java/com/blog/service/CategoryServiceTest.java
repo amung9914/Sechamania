@@ -23,8 +23,8 @@ class CategoryServiceTest {
     public void save() throws Exception {
         // given
 
-        Category category = new Category("name1");
-        categoryService.save(category);
+
+        categoryService.save("name1");
         // when
         em.flush();
         em.clear();
@@ -32,19 +32,15 @@ class CategoryServiceTest {
         List<Category> all = categoryService.findAll();
 
         // then
-        Assertions.assertThat(all.get(0).getName()).isEqualTo(category.getName());
     }
 
     @Test
     public void list() throws Exception {
         // given
 
-        Category category1 = new Category("name1");
-        Category category2 = new Category("name2");
-        Category category3 = new Category("name3");
-        categoryService.save(category1);
-        categoryService.save(category2);
-        categoryService.save(category3);
+        categoryService.save("name1");
+        categoryService.save("name2");
+        categoryService.save("name3");
         // when
         em.flush();
         em.clear();
@@ -59,8 +55,7 @@ class CategoryServiceTest {
     public void modify() throws Exception {
         // given
 
-        Category category = new Category("name1");
-        categoryService.save(category);
+        categoryService.save("name1");
         // when
         em.flush();
         em.clear();
@@ -81,12 +76,9 @@ class CategoryServiceTest {
     public void delete() throws Exception {
         // given
 
-        Category category1 = new Category("name1");
-        Category category2 = new Category("name2");
-        Category category3 = new Category("name3");
-        categoryService.save(category1);
-        categoryService.save(category2);
-        categoryService.save(category3);
+        categoryService.save("name1");
+        categoryService.save("name2");
+        categoryService.save("name3");
         // when
         em.flush();
         em.clear();

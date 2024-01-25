@@ -1,12 +1,11 @@
 package com.blog.controller;
 
-import com.blog.dto.ArticleListDto;
-import com.blog.dto.ArticleResponseDto;
-import com.blog.dto.HashtagDto;
-import com.blog.dto.UpdateHashtagDto;
+import com.blog.dto.*;
 import com.blog.entity.Article;
+import com.blog.entity.Category;
 import com.blog.service.ArticleService;
 import com.blog.service.BookmarkService;
+import com.blog.service.CategoryService;
 import com.blog.util.ImgUploader;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +23,7 @@ public class ArticleApiController {
     private final ImgUploader imgUploader;
     private final ArticleService articleService;
     private final BookmarkService bookmarkService;
+    private final CategoryService categoryService;
 
     @GetMapping("api/articleList")
     public Page<ArticleListDto> getArticleList(){
@@ -33,6 +33,22 @@ public class ArticleApiController {
     @GetMapping("api/articleList/{page}")
     public Page<ArticleListDto> getPage(@PathVariable int page){
         return articleService.findAllWithPage(page);
+    }
+
+    /**
+     * 해시태그를 가지고 조회한다
+     */
+    @PostMapping("api/articleListWithHashtag")
+    public Page<ArticleListDto> getArticleListWithHashtag(@RequestBody PageRequestForList request){
+        return articleService.findAllWithPageAndHashtag(request.getPage()==0?0: request.getPage(), request.getHashtagId());
+    }
+
+    /**
+     * 카테고리를 가지고 조회한다
+     */
+    @PostMapping("api/articleListWithCategory")
+    public Page<ArticleListDto> getArticleListWithCategory(@RequestBody PageRequestForList request){
+        return articleService.findAllWithPageAndCategory(request.getPage()==0?0: request.getPage(), request.getCategoryId());
     }
 
     /**
@@ -98,6 +114,17 @@ public class ArticleApiController {
             articleService.save(principal.getName(), dto.getAddArticleDto());
             return new Result(true);
         }
+    }
+
+    /**
+     * 공지사항을 저장하는 api
+     */
+    @PostMapping("admin/notice")
+    public Result<Boolean> saveNotice(@RequestBody AddArticleDto dto, Principal principal){
+        Category category = categoryService.findByName("공지사항");
+        dto.setCategoryId(category.getId());
+        articleService.save(principal.getName(), dto);
+        return new Result(true);
     }
 
     /**
@@ -174,5 +201,13 @@ public class ArticleApiController {
             this.categoryId = article.getCategory().getId();
             this.hashtags = article.getArticleHashtags().stream().map(articleHashtag -> articleHashtag.getHashtag().getName()).toArray(String[]::new);
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    static private class PageRequestForList {
+        private long hashtagId;
+        private long categoryId;
+        private int page;
     }
 }

@@ -91,6 +91,30 @@ public class ArticleService {
                         article.getCategory().getName(),article.getCreatedDate(),article.getMember().getProfileImg()));
     }
 
+    /**
+     * 해시태그로 검색한 articleList
+     */
+    public Page<ArticleListDto> findAllWithPageAndHashtag(int page,long hashtagId){
+        PageRequest pageRequest = PageRequest.of(page,5, Sort.by(Sort.Direction.DESC,"id"));
+        Page<Article> articles = articleRepository.findPageWithHashtag(pageRequest,hashtagId);
+        return articles.map(article ->
+                new ArticleListDto(article.getId(), article.getTitle(), article.getMember().getNickname(),
+                        article.getCategory().getName(),article.getCreatedDate(),article.getMember().getProfileImg()));
+    }
+
+
+
+    /**
+     * 카테고리로 검색한 articleList
+     */
+    public Page<ArticleListDto> findAllWithPageAndCategory(int page,long categoryId){
+        PageRequest pageRequest = PageRequest.of(page,5, Sort.by(Sort.Direction.DESC,"id"));
+        Page<Article> articles = articleRepository.findPageWithCategory(pageRequest,categoryId);
+        return articles.map(article ->
+                new ArticleListDto(article.getId(), article.getTitle(), article.getMember().getNickname(),
+                        article.getCategory().getName(),article.getCreatedDate(),article.getMember().getProfileImg()));
+    }
+
     public Page<ArticleListDto> findPageForNotice(int page){
         PageRequest pageRequest = PageRequest.of(page,5, Sort.by(Sort.Direction.DESC,"id"));
         Page<Article> articles = articleRepository.findPageForNotice(pageRequest,"공지사항");

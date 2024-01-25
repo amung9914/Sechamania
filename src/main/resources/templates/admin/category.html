@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <div layout:fragment="script">
-    <script th:src="@{/js/adminMain.js}"></script>
+    <script th:src="@{/js/adminCategory.js}"></script>
 </div>
 <div layout:fragment="css">
     <style>
@@ -41,6 +41,12 @@
         .inner_box div{
             margin: 5px 0;
         }
+        #tbody{
+            text-align: center;
+        }
+        .category_name{
+            text-align: left;
+        }
 
     </style>
 </div>
@@ -54,27 +60,22 @@
                 <li class="nav-item">
                     <a class="nav-link active" th:href="@{/view/admin/category}">카테고리 관리</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/view/admin/notice}">공지사항 작성</a>
+                </li>
             </ul>
         </div>
         <div class="center">
             <div class="box w-75 p-3">
                 <div class="logo">
-                    <h3>유입관리</h3>
+                    <h3>카테고리 관리</h3>
                 </div>
                 <div class="inner_box w-75 p-3" id="inner_box">
-                    <h4>로그</h4>
-                    <p>최근3일 최신순</p>
-
                     <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th scope="col">유입경로</th>
-                            <th scope="col">시간</th>
-                        </tr>
-                        </thead>
                         <tbody id="tbody">
                         </tbody>
                     </table>
+                    <button type="button" class="btn btn-outline-dark btn-sm" id="plus_btn">+</button>
                 </div>
             </div>
         </div>

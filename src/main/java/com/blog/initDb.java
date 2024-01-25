@@ -29,9 +29,9 @@ public class initDb {
         initService.dbInit1();
         initService.dbInit2();
         initService.makeCategories();
-        //for (int i = 0; i <100; i++) {
+        for (int i = 0; i <50; i++) {
             initService.makeArticle();
-        //}
+        }
         initService.makeComment();
         initService.makeBookmark();
 
@@ -92,14 +92,10 @@ public class initDb {
         }
 
         public void makeCategories(){
-            Category category1 = new Category("공지사항");
-            Category category2 = new Category("자유게시판");
-            Category category3 = new Category("제품리뷰");
-            Category category4 = new Category("셀프세차장후기");
-            Long id = categoryService.save(category1);
-            categoryService.save(category2);
-            categoryService.save(category3);
-            categoryService.save(category4);
+            Long id = categoryService.save("공지사항");
+            categoryService.save("자유게시판");
+            categoryService.save("제품리뷰");
+            categoryService.save("셀프세차장후기");
         }
 
         public void makeArticle(){

@@ -26,14 +26,6 @@ document.addEventListener('DOMContentLoaded',function (){
         });
     }
 
-    // chekcAuthority
-    document.getElementById("checkAuthority").addEventListener('click',function (){
-        function success(response){
-            console.log(response);
-        }
-        httpRequestWtihTokenAndResponse("GET","/test/1",null,success,null);
-    })
-
 });
 
 // HTTP GET 요청을 보내는 함수

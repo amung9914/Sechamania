@@ -26,9 +26,22 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     Article findArticleById(@Param("id") long id);
 
     @Query(value = "select a from Article a left join a.member m " +
-            "join fetch a.category c",
+            "join fetch a.category c where c.name !='공지사항'",
             countQuery = "select count(a) from Article a")
     Page<Article> findPage(Pageable pageable);
+
+    @Query(value = "select a from Article a left join a.member m " +
+            "join a.articleHashtags ah " +
+            "join ah.hashtag h where h.id =:hashtagId",
+            countQuery = "select count(a) from Article a join a.articleHashtags ah join ah.hashtag h where h.id =:hashtagId")
+    Page<Article> findPageWithHashtag(Pageable pageable, @Param("hashtagId")long hashtagId);
+
+    @Query(value = "select a from Article a left join a.member m " +
+            "join a.category c where c.id =:categoryId",
+            countQuery = "select count(a) from Article a join a.category c where c.id =:categoryId")
+    Page<Article> findPageWithCategory(Pageable pageable, @Param("categoryId")long categoryId);
+
+
 
     @Query(value = "select a from Article a left join a.member m " +
             "join fetch a.category c where c.name = :name",

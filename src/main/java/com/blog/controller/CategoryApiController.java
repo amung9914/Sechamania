@@ -6,8 +6,7 @@ import com.blog.service.CategoryService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +22,24 @@ public class CategoryApiController {
         return new Result(list.stream().map(category -> new Categorydto(category)).toList());
     }
 
+    @PostMapping("admin/category")
+    public Result update(@RequestBody Categorydto dto){
+        categoryService.modify(dto.getCategoryId(),dto.getName());
+        return new Result(true);
+    }
+
+    @DeleteMapping("admin/category")
+    public Result delete(@RequestBody Categorydto dto){
+        categoryService.delete(dto.getCategoryId());
+        return new Result(true);
+    }
+
+    @PostMapping("admin/saveCategory")
+    public Result save(@RequestBody Categorydto dto){
+        Long id = categoryService.save(dto.getName());
+        return new Result(id);
+    }
+
     @Data
     @AllArgsConstructor
     static class Result<T>{
@@ -31,9 +48,14 @@ public class CategoryApiController {
 
 
     @Data
-    private class Categorydto {
-        private Long categoryId;
+    static private class Categorydto {
+        private long categoryId;
         private String name;
+
+        public Categorydto(long categoryId, String name) {
+            this.categoryId = categoryId;
+            this.name = name;
+        }
 
         public Categorydto(Category category) {
             this.categoryId = category.getId();

@@ -92,4 +92,9 @@ public class ViewController {
     public String adminCategory(){
         return "/admin/category";
     }
+
+    @GetMapping("/view/admin/notice")
+    public String adminNotice(){
+        return "/admin/writeNotice";
+    }
 }

@@ -4,11 +4,13 @@ document.addEventListener("DOMContentLoaded", function(){
         let selectDiv =  document.getElementById("category");
         let jsonData = response.data;
         jsonData.forEach(function(data){
-            // 동적으로 li 요소 생성 및 설정
-            let option = document.createElement("option");
-            option.setAttribute("value", data.categoryId);
-            option.innerText = data.name;
-            selectDiv.appendChild(option);
+            if(data.name!=="공지사항") {
+                // 동적으로 li 요소 생성 및 설정
+                let option = document.createElement("option");
+                option.setAttribute("value", data.categoryId);
+                option.innerText = data.name;
+                selectDiv.appendChild(option);
+            }
         });
     }
     function failForCategory(){
@@ -54,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function(){
             let view = document.getElementById("hashtag_view");
             let div = document.createElement("div");
             div.className = "p_tag";
-            div.innerHTML = '#<p>'+newHashtag.value+'</p>' +
+            div.innerHTML = '#<p class="hash_text">'+newHashtag.value+'</p>' +
                 '<p class="close_btn" onclick="deleteTag(this)">x</p>';
             view.appendChild(div);
             newHashtag.value = "";
@@ -73,11 +75,11 @@ document.addEventListener("DOMContentLoaded", function(){
         }else{
             let markupStr = $('#summernote').summernote('code'); // 본문 내용
             // 해시태그 배열 변환
-            let elements = document.getElementsByClassName('p_tag');
+            let elements = document.getElementsByClassName('hash_text');
             let hashtags = [];
             for(let i = 0; i<elements.length; i++){
                 let text = elements[i].innerText;
-                hashtags.push(text.substring(text.indexOf('#\n\n')+3));
+                hashtags.push(text);
             }
 
             let body = JSON.stringify({
