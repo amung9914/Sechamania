@@ -4,6 +4,28 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gtd8983@gmail.com
+    password: //
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: //
+            client-secret: //
+            scope:
+              - email
+              - profile
 
   jpa:
     hibernate:
@@ -13,13 +35,27 @@ spring:
         format_sql: true
         # show_sql: true
 
-    # 테이블 생성 후에 data.sql 실행
-    defer-datasource-initialization: true
-  sql:
-    init:
-      mode: always
-
 logging:
   level:
     org.hibernate.SQL: debug
     #org.hibernate.type: trace
+
+app:
+  kakaomap: //
+  weather: //
+
+jwt:
+  issuer: amung@gmail.com
+  secret_key: //
+
+cloud:
+  aws:
+    credentials:
+      accessKey: //
+      secretKey: //
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: //

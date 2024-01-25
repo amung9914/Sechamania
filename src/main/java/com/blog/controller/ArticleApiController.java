@@ -6,7 +6,7 @@ import com.blog.entity.Category;
 import com.blog.service.ArticleService;
 import com.blog.service.BookmarkService;
 import com.blog.service.CategoryService;
-import com.blog.util.ImgUploader;
+import com.blog.util.S3Uploader;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class ArticleApiController {
 
-    private final ImgUploader imgUploader;
+    private final S3Uploader s3Uploader;
     private final ArticleService articleService;
     private final BookmarkService bookmarkService;
     private final CategoryService categoryService;
@@ -109,8 +109,11 @@ public class ArticleApiController {
 
     @PostMapping("save/articleImage")
     public Result<String> uploadImage(@RequestParam MultipartFile file){
-        System.out.println(file);
-        return new Result("/img/defaultProfile.jpg");
+        String url = "";
+        if(file!=null){
+            url = s3Uploader.uploadFileToS3(file,"static/img");
+        }
+        return new Result(url);
     }
 
     @PostMapping("save/article")

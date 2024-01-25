@@ -8,7 +8,7 @@ import com.blog.entity.Member;
 import com.blog.entity.MemberStatus;
 import com.blog.repository.AuthorityRepository;
 import com.blog.repository.MemberRepository;
-import com.blog.util.ImgUploader;
+import com.blog.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class MemberService {
     private final AuthorityRepository authorityRepository;
     private final BCryptPasswordEncoder encoder;
 
-    private final ImgUploader imgUploader;
+    private final S3Uploader s3Uploader;
 
     @Transactional
     public Long join(AddUserRequest dto, MultipartFile file){
@@ -35,7 +35,7 @@ public class MemberService {
         if(file==null){
             path = "img/defaultProfile.jpg";
         }else{
-            path = imgUploader.savdImg(file);
+            path = s3Uploader.uploadFileToS3(file,"static/img");
         }
 
         Member newMember = Member.builder()
@@ -61,7 +61,7 @@ public class MemberService {
         if(file==null){
             path = "img/defaultProfile.jpg";
         }else{
-            path = imgUploader.savdImg(file);
+            path = s3Uploader.uploadFileToS3(file,"static/img");
         }
 
         Member newMember = Member.builder()
@@ -118,7 +118,7 @@ public class MemberService {
         if(file==null){
             path = "img/defaultProfile.jpg";
         }else{
-            path = imgUploader.savdImg(file);
+            path = s3Uploader.uploadFileToS3(file,"static/img");
         }
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 email입니다"));
@@ -143,7 +143,7 @@ public class MemberService {
         if(file!=null){
 
             String path = null;
-            path = imgUploader.savdImg(file);
+            path = s3Uploader.uploadFileToS3(file,"static/img");
 
             member.updateProfileImg(path);
         }

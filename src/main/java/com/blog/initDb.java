@@ -28,6 +28,7 @@ public class initDb {
 
         initService.dbInit1();
         initService.dbInit2();
+        initService.dbInit3();
         initService.makeCategories();
         for (int i = 0; i <50; i++) {
             initService.makeArticle();
@@ -91,6 +92,22 @@ public class initDb {
             companyAuth.makeRole(newMember);
         }
 
+        public void dbInit3(){
+            Member newMember = Member.builder()
+                    .email("user1@user.com")
+                    .password("$2a$10$WvmocswXUNtFTenr8jZh4uNPwmRrTGufupnElllKk61.OaG1GqXQe")
+                    .nickname("보리이즈마인")
+                    .address(new Address("서울 영등포구 국제금융로 101층","영등포구","37.5251775245928","126.924876706923"))
+                    .status(MemberStatus.ACTIVE)
+                    .imgPath("/img/defaultProfile.jpg")
+                    .build();
+            memberRepository.save(newMember);
+
+            Authorities userAuth = new Authorities("ROLE_USER");
+            authorityRepository.save(userAuth);
+            userAuth.makeRole(newMember);
+        }
+
         public void makeCategories(){
             Long id = categoryService.save("공지사항");
             categoryService.save("자유게시판");
@@ -112,7 +129,7 @@ public class initDb {
             articleService.saveWithHashtag("user@user.com",addArticleDto1,arr1);
 
             AddArticleDto addArticleDto2 = new AddArticleDto("오늘 진짜 춥네요", "낮인데 영하 7도네요", category.getId());
-            String[] arr2 = {"날씨","영하","눈소식","눈소식1","눈소식2","눈소식3","눈소식4","눈소식5",};
+            String[] arr2 = {"날씨","영하","눈소식",};
             articleService.saveWithHashtag("user@user.com",addArticleDto2,arr2);
 
             Category category3 = categoryService.findByName("공지사항");
@@ -122,20 +139,27 @@ public class initDb {
             articleService.save("admin@admin.com",addArticleDto3);
             AddArticleDto addArticleDto4 = new AddArticleDto("세차매니아 로그인에 문제가 있으신가요?",
                     "세차매니아에서는 이메일 형태의 아이디와 구글을 통한 로그인이 제공되고 있습니다.", category3.getId());
-
-            // when
             articleService.save("admin@admin.com",addArticleDto4);
+
+            AddArticleDto addArticleDto5 = new AddArticleDto("쓱싹스팀세차 마곡점 이용 후기", "셀스세차장은 아닌데 좋아서 가봤어요", category1.getId());
+            String[] arr5 = {"스팀세차"};
+            articleService.saveWithHashtag("user1@user.com",addArticleDto5,arr5);
+
+            AddArticleDto addArticleDto6 = new AddArticleDto("어제 손세차하다가 얼음될뻔 했네요", "다들 조심 하시길", category.getId());
+            String[] arr6 = {"날씨","얼음","강추위","손세차"};
+            articleService.saveWithHashtag("user1@user.com",addArticleDto6,arr6);
+
         }
         public void makeComment(){
             List<Article> all = articleService.findAll();
             // given
             CommentRequestDto dto1 = new CommentRequestDto("댓글1", all.get(0).getId(), null);
             // when
-            Long id = commentService.createComment(dto1, "admin@admin.com");
+            Long id = commentService.createComment(dto1, "user1@user.com");
             CommentRequestDto dto2 = new CommentRequestDto("답글1", all.get(0).getId(), id);
-            Long id2 = commentService.createComment(dto2, "admin@admin.com");
+            Long id2 = commentService.createComment(dto2, "user@user.com");
             CommentRequestDto dto3 = new CommentRequestDto("답글1의 답글1", all.get(0).getId(), id2);
-            commentService.createComment(dto3, "admin@admin.com");
+            commentService.createComment(dto3, "user1@user.com");
         }
 
         public void makeBookmark(){
