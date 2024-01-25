@@ -99,6 +99,14 @@ public class ArticleApiController {
         return articleService.findPageForNotice(page);
     }
 
+    /**
+     * 검색하는 api
+     */
+    @PostMapping("api/search")
+    public Page<ArticleListDto> getSearch(@RequestBody PageRequestForSearch request){
+        return articleService.findPageForSearch(request.getPage()==0?0: request.getPage(), request.getKeyword());
+    }
+
     @PostMapping("save/articleImage")
     public Result<String> uploadImage(@RequestParam MultipartFile file){
         System.out.println(file);
@@ -208,6 +216,13 @@ public class ArticleApiController {
     static private class PageRequestForList {
         private long hashtagId;
         private long categoryId;
+        private int page;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static private class PageRequestForSearch {
+        private String keyword;
         private int page;
     }
 }

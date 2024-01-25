@@ -54,4 +54,9 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             countQuery = "select count(a) from Article a join a.member m where a.member.id = :memberId")
     Page<Article> findMyArticles(Pageable pageable, @Param("memberId")long memberId);
 
+
+    @Query(value = "select a from Article a left join a.member m " +
+            "where a.title LIKE :keyword or a.title LIKE :keyword",
+            countQuery = "select count(a) from Article a where a.title LIKE :keyword or a.title LIKE :keyword")
+    Page<Article> findPageForSearch(Pageable pageable,@Param("keyword")String keyword);
 }

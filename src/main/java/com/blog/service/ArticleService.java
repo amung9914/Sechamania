@@ -123,6 +123,19 @@ public class ArticleService {
                         article.getCategory().getName(),article.getCreatedDate(),article.getMember().getProfileImg()));
     }
 
+    /**
+     * 검색어로 검색
+     */
+    public Page<ArticleListDto> findPageForSearch(int page, String keyword){
+        String target = "%"+keyword+"%";
+        PageRequest pageRequest = PageRequest.of(page,5, Sort.by(Sort.Direction.DESC,"id"));
+        Page<Article> articles = articleRepository.findPageForSearch(pageRequest,target);
+        return articles.map(article ->
+                new ArticleListDto(article.getId(), article.getTitle(), article.getMember().getNickname(),
+                        article.getCategory().getName(),article.getCreatedDate(),article.getMember().getProfileImg()));
+    }
+
+
     public Page<ArticleListDto> findMyArticle(int page,String email){
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
@@ -206,6 +219,7 @@ public class ArticleService {
 
         articleRepository.deleteById(id);
     }
+
 
     private void validateAuthor(Member member,Article article){
         if(!article.getMember().getEmail().equals(member.getEmail())){

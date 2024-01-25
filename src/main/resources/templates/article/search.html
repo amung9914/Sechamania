@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<div layout:fragment="script">
+    <script th:src="@{/js/search.js}"></script>
+</div>
+<div layout:fragment="css">
+    <style>
+        .center{
+            text-align: -webkit-center;;
+        }
+        .inner_box{
+            margin: 20px 4% 20px 3%;
+            padding: 10px;
+        }
+        .logo{
+            margin: 0 3%;
+            text-align: left;
+        }
+        .box{
+            margin: 20px;
+
+        }
+        .inner_box div{
+            margin: 5px 0;
+        }
+
+        .notice{
+            color: orange;
+        }
+        .pagination, .pagination:hover{
+            cursor: pointer;
+        }
+        .author{
+            display: inline-flex;
+        }
+        .date{
+            margin: 10px 10px 0 0;
+        }
+        hr{
+             background-color: #eeeeee;
+             margin: 30px 0;
+         }
+
+    </style>
+</div>
+<div layout:fragment="content">
+    <div class="root">
+        <div class="center">
+            <div class="box w-75 p-3">
+                <div class="logo" id="search_title">
+                    <h3>검색결과</h3>
+                </div>
+                <div class="inner_box">
+                    <div id="article_List">
+                    </div>
+                    <div class="pagenation">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination" id="pagination">
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

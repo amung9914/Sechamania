@@ -32,7 +32,7 @@ function searchHashtag(hashtagId){
         let paginationUl = document.getElementById("pagination");
         let newHTML = "";
         let before = startRange-1;
-        if(response.first!==true){
+        if(response.pageable.pageNumber>4){
             newHTML +=
                 '<li class="page-item">' +
                 '                                <a class="page-link" onclick="callPageForHashtag('+before+',hashtagId)" aria-label="Previous">' +
@@ -51,7 +51,7 @@ function searchHashtag(hashtagId){
             }
         }
         let next = endRange + 1;
-        if(response.last!==true){
+        if(response.totalPages-response.pageable.pageNumber>5){
             newHTML +=
                 '                            <li class="page-item">' +
                 '                                <a class="page-link" onclick="callPageForHashtag('+next+',hashtagId)" aria-label="Next">' +
@@ -108,7 +108,7 @@ function callPageForHashtag(page,hashtagId){
         let paginationUl = document.getElementById("pagination");
         let newHTML = "";
         let before = startRange-1;
-        if(response.first!==true){
+        if(response.pageable.pageNumber>4){
             newHTML +=
                 '<li class="page-item">' +
                 '                                <a class="page-link" onclick="callPageForHashtag('+before+',hashtagId)" aria-label="Previous">' +
@@ -127,7 +127,7 @@ function callPageForHashtag(page,hashtagId){
             }
         }
         let next = endRange + 1;
-        if(response.last!==true){
+        if(response.totalPages-response.pageable.pageNumber>5){
             newHTML +=
                 '                            <li class="page-item">' +
                 '                                <a class="page-link" onclick="callPageForHashtag('+next+',hashtagId)" aria-label="Next">' +
@@ -184,7 +184,7 @@ function searchCategory(categoryId){
         let paginationUl = document.getElementById("pagination");
         let newHTML = "";
         let before = startRange-1;
-        if(response.first!==true){
+        if(response.pageable.pageNumber>4){
             newHTML +=
                 '<li class="page-item">' +
                 '                                <a class="page-link" onclick="callPageForCategory('+before+',categoryId)" aria-label="Previous">' +
@@ -203,7 +203,7 @@ function searchCategory(categoryId){
             }
         }
         let next = endRange + 1;
-        if(response.last!==true){
+        if(response.totalPages-response.pageable.pageNumber>5){
             newHTML +=
                 '                            <li class="page-item">' +
                 '                                <a class="page-link" onclick="callPageForCategory('+next+',categoryId)" aria-label="Next">' +
@@ -259,7 +259,7 @@ function callPageForCategory(page,categoryId){
         let paginationUl = document.getElementById("pagination");
         let newHTML = "";
         let before = startRange-1;
-        if(response.first!==true){
+        if(response.pageable.pageNumber>4){
             newHTML +=
                 '<li class="page-item">' +
                 '                                <a class="page-link" onclick="callPageForCategory('+before+',categoryId)" aria-label="Previous">' +
@@ -278,7 +278,7 @@ function callPageForCategory(page,categoryId){
             }
         }
         let next = endRange + 1;
-        if(response.last!==true){
+        if(response.totalPages-response.pageable.pageNumber>5){
             newHTML +=
                 '                            <li class="page-item">' +
                 '                                <a class="page-link" onclick="callPageForCategory('+next+',categoryId)" aria-label="Next">' +

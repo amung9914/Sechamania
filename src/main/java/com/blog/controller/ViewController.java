@@ -97,4 +97,9 @@ public class ViewController {
     public String adminNotice(){
         return "/admin/writeNotice";
     }
+
+    @GetMapping("/view/search/{text}")
+    public String searchList(){
+        return "/article/search";
+    }
 }

@@ -118,7 +118,7 @@ function callPage(page){
         let paginationUl = document.getElementById("pagination");
         let newHTML = "";
         let before = startRange-1;
-        if(response.first!==true){
+        if(response.pageable.pageNumber>4){
             newHTML +=
                 '<li class="page-item">' +
                 '                                <a class="page-link" onclick="callPage('+before+')" aria-label="Previous">' +
@@ -127,7 +127,9 @@ function callPage(page){
                 '                            </li>';
 
         }
+
         for (let i = startRange; i <= endRange; i++) {
+
             if(i===currentPage){
                 newHTML +=  '<li class="page-item"><a class="page-link notice" onclick="callPage('+i+')">'+i+'</a></li>';
             }else if(i>=response.totalPages){
@@ -136,8 +138,8 @@ function callPage(page){
                 newHTML +=  '<li class="page-item"><a class="page-link" onclick="callPage('+i+')">'+i+'</a></li>';
             }
         }
-        let next = endRange + 1;
-        if(response.last!==true){
+        let next = endRange+1;
+        if(response.totalPages-response.pageable.pageNumber>5){
             newHTML +=
                 '                            <li class="page-item">' +
                 '                                <a class="page-link" onclick="callPage('+next+')" aria-label="Next">' +
@@ -194,6 +196,16 @@ function roadAllArticle(){
 
         let paginationUl = document.getElementById("pagination");
         let newHTML = "";
+        let before = startRange-1;
+        if(response.pageable.pageNumber>4){
+            newHTML +=
+                '<li class="page-item">' +
+                '                                <a class="page-link" onclick="callPage('+before+')" aria-label="Previous">' +
+                '                                    <span aria-hidden="true">&laquo;</span>' +
+                '                                </a>' +
+                '                            </li>';
+
+        }
 
         for (let i = startRange; i <= endRange; i++) {
 
@@ -206,7 +218,7 @@ function roadAllArticle(){
             }
         }
         let next = endRange+1;
-        if(response.last!==true){
+        if(response.totalPages-response.pageable.pageNumber>5){
             newHTML +=
                 '                            <li class="page-item">' +
                 '                                <a class="page-link" onclick="callPage('+next+')" aria-label="Next">' +

@@ -1,5 +1,20 @@
 document.addEventListener('DOMContentLoaded',function (){
 
+
+    document.getElementById("modal_input").addEventListener("keydown",function (event) {
+            let key = event.key;
+            if(key==='Enter'){
+                event.preventDefault();
+                document.getElementById("model_btn").click();
+            }
+    })
+    /* 검색 */
+    document.getElementById("model_btn").addEventListener("click",function (){
+        let searchText = document.getElementById("modal_input").value;
+        location.replace("/view/search/"+searchText);
+    })
+
+
     const logout = document.getElementById("logout");
     if(logout){
         logout.addEventListener('click',function(){
@@ -296,4 +311,3 @@ function getCookie(key){
     });
     return result;
 }
-
