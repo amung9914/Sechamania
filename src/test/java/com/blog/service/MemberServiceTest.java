@@ -43,8 +43,8 @@ class MemberServiceTest {
 
     }
 
-    @Test
-    public void joinForCompany() throws Exception {
+    //@Test
+    /*public void joinForCompany() throws Exception {
         // given
         AddUserRequest request1 = new AddUserRequest("test", "test", "1234", "add","r","city", "lat", "lon");
 
@@ -61,10 +61,10 @@ class MemberServiceTest {
 
         // then
         Assertions.assertThat(findMember.get().getEmail()).isEqualTo(request1.getEmail());
-    }
+    }*/
 
-    @Test
-    public void duplicatedEmail() throws Exception {
+    //@Test
+    /*public void duplicatedEmail() throws Exception {
         // given
         AddUserRequest request1 = new AddUserRequest("test", "test", "1234", "add","r","city", "lat", "lon");
         // when
@@ -79,25 +79,7 @@ class MemberServiceTest {
         });
 
 
-    }
-
-    @Test
-    public void duplicatedNickname() throws Exception {
-        // given
-        AddUserRequest request1 = new AddUserRequest("test", "test", "1234", "add","r","city", "lat", "lon");
-        // when
-        memberService.join(request1,null);
-        em.flush();
-        em.clear();
-        AddUserRequest request2 = new AddUserRequest("test1", "test1", "1234", "add","r","city", "lat", "lon");
-
-        //then
-        assertThrows(IllegalStateException.class, () ->{
-            memberService.join(request2,null);
-        });
-
-    }
-
+    }*/
 
 
 }

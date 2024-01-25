@@ -19,87 +19,87 @@ public class ViewController {
 
     @GetMapping("/test")
     public String imgtest(){
-        return "/test/img";
+        return "test/img";
     }
 
     @GetMapping("/login")
     public String login(){
-        return "/user/login";
+        return "user/login";
     }
 
     @GetMapping("/login/error")
     public String loginError(Model model){
         model.addAttribute("loginErrorMsg","아이디 또는 비밀번호를 확인해주세요");
-        return "/user/login";
+        return "user/login";
     }
 
     @GetMapping("/signup")
     public String signup(){
-        return "/user/signup";
+        return "user/signup";
     }
 
     @GetMapping("/signup/oauth2")
     public String signupByOauth2(){
-        return "/user/oauthSignup";
+        return "user/oauthSignup";
     }
 
     @GetMapping("/view/mypage")
     public String mypage(){
-        return "/user/mypage";
+        return "user/mypage";
     }
 
     @GetMapping("/view/article")
     public String articleMain(){
-        return "/article/main";
+        return "article/main";
     }
 
     @GetMapping("/view/updateArticle/{id}")
     public String articleUpdate(){
-        return "/article/update";
+        return "article/update";
     }
 
     @GetMapping("/view/writeArticle")
     public String articleWrite(){
-        return"/article/write";
+        return"article/write";
     }
 
     @GetMapping("/view/article/{id}")
     public String articleView(){
-        return "/article/view";
+        return "article/view";
     }
 
     @GetMapping("/view/bookmark")
     public String bookmarkList(){
-        return "/user/bookmark";
+        return "user/bookmark";
     }
 
     @GetMapping("/view/myArticle")
     public String myArticleList(){
-        return "/user/myArticle";
+        return "user/myArticle";
     }
 
     @GetMapping("/view/notice")
     public String noticeList(){
-        return "/article/notice";
+        return "article/notice";
     }
 
     @GetMapping("/view/admin")
     public String adminMain(){
-        return "/admin/main";
+        return "admin/main";
     }
 
     @GetMapping("/view/admin/category")
     public String adminCategory(){
-        return "/admin/category";
+        return "admin/category";
     }
 
     @GetMapping("/view/admin/notice")
     public String adminNotice(){
-        return "/admin/writeNotice";
+        return "admin/writeNotice";
     }
 
     @GetMapping("/view/search/{text}")
     public String searchList(){
-        return "/article/search";
+        return "article/search";
     }
 }

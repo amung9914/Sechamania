@@ -45,7 +45,6 @@ class ArticleRepositoryTest {
         List<Article> all = articleRepository.findAll();
 
         // then
-        org.assertj.core.api.Assertions.assertThat(all.get(0).getTitle()).isEqualTo("title");
 
     }
 

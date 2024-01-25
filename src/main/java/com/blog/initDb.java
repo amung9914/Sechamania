@@ -30,7 +30,7 @@ public class initDb {
         initService.dbInit2();
         initService.dbInit3();
         initService.makeCategories();
-        for (int i = 0; i <50; i++) {
+        for (int i = 0; i < 10; i++) {
             initService.makeArticle();
         }
         initService.makeComment();

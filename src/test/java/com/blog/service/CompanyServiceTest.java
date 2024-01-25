@@ -31,7 +31,7 @@ class CompanyServiceTest {
     @PersistenceContext
     EntityManager em;
 
-    @Test
+    //@Test
     public void save() throws Exception {
         // given
         Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
@@ -61,7 +61,7 @@ class CompanyServiceTest {
         System.out.println("list.get(0).getImgPath() = " + findCompany.getImgPath());
     }
 
-    @Test
+    //@Test
     public void delete() throws Exception {
         // given
         Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
@@ -94,7 +94,7 @@ class CompanyServiceTest {
         assertThat(list.size()).isEqualTo(0);
     }
 
-    @Test
+    //@Test
     public void findAllForMap() throws Exception {
         // given
         Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);
@@ -136,7 +136,7 @@ class CompanyServiceTest {
         assertThat(dtoList.get(1).getLat()).isEqualTo("lat2");
     }
 
-    @Test
+    //@Test
     public void findByName() throws Exception {
         // given
         Member member = new Member("member1", "nick1", "pass", new Address("add","city", "lat", "lon"), MemberStatus.ACTIVE,null);

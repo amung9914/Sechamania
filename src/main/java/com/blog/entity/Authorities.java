@@ -13,6 +13,7 @@ public class Authorities extends BaseTimeEntity{
     @Column(name = "authorities_id")
     private Long id;
 
+    @Column(length = 15)
     private String role;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

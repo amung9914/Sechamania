@@ -57,7 +57,7 @@ public class SecurityConfig {
         //헤더를 확인할 커스텀 필터를 추가해준다
 
                 http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/error","/","/login","/login/**",
+                        .requestMatchers("/error","/error/**","/","/login","/login/**",
                                 "/mail","/test/**","/signup","/signup/**","/view/**","/tempimg/**"
                         ,"api/**").permitAll()
                         .requestMatchers(RESOURCE).permitAll()
