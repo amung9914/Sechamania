@@ -156,32 +156,79 @@ Github master branch push를 하면 바로 배포될 수 있도록 CI/CD를 구�
 
 ## 🔥 트러블슈팅
 
-### problem 1 : 글을 가져올때 ArticleImg로 인해 패치조인 오류 발생 및 최적화 불가
-<hr>
+## problem 1 : Article의 해시태그가 없는 경우로 인해 N+1 문제 발생
 
-글 정보를 한 번에 가져오려고 하자 MultipleBagFetchException이 발생하였습니다.<br>
-컬렉션은 둘 이상 fetch join이 불가능하여 발생하는 오류였습니다.<br>
+---
 
-현재 Article-ArticleHashtag-Hashtag<br>
-    Article-ArticleImg
+### solution:
 
-이런 형태의 연관관계가 형성중이고 정보를 한 번에 가져오려고 하니 문제가 발생합니다. 
+원래 Article 조회 시 모든 join을 fetchjoin으로 하고 있었어서 문제가 없었는데,
 
-### solution: 
+Article의 Hashtag가 없는 경우 fetchjoin으로 조회할 수 없어서 left join을 추가해서 쿼리를 수정.
 
-1. 배치사이즈 이용 - 쿼리 4번(조인테이블 총 4개),<br>
-2. 패치조인 사용 및 img 따로 객체 그래프 조회 - 쿼리 2번<br>
+`@Query("select a from Article a " +
+        "join fetch a.category c " +
+        "join fetch a.member m " +
+        "left join a.articleHashtags ah " +
+        "left join ah.hashtag h " +
+        "where a.id =:id")
+Article findArticleByArticleId(@Param("id") long id);`
+
+이렇게 쿼리를 수정했더니 N+1문제가 발생했습니다.
+
+(해시태그가 만약 2개가 있는 경우 article 조회 1번, articleHashtags 조회 1번 hashtag 조회 2번 발생)
+
+### solution
+
+1. 배치사이즈 이용 - 효과 없음
+2. 해시태그가 있는 경우와 없는 경우의 쿼리를 분리
+3. queryDsl 이용
+
+### result : 2번째 방법 채택
+
+Service layer에서 해시태그가 있는 경우와 없는 경우를 분리해서 repository 메서드를 호출 했습니다.
+
+articleHashtag에서 해시태그가 존재하는지 먼저 확인 후 해시태그가 있는 경우 모든 join을 fetch join을 이용해서 한 번에 조회할 수 있도록 구현, 해시태그가 없는 경우에는 category와 member까지만 fetch join을 하는 것으로 정리했습니다.
+
+이렇게 하면 해시태그가 있는 경우 articleHashtag테이블 쿼리 1번 article조회쿼리 1번 실행.
+
+해시태그가 없는 경우 articleHashtag테이블 쿼리2번 article조회쿼리 1번 실행됩니다.
+
+---
+<br>
+
+## problem 2 : 글을 가져올때 ArticleImg로 인해 패치조인 오류 발생 및 최적화 불가
+
+---
+
+글 정보를 한 번에 가져오려고 하자 MultipleBagFetchException이 발생하였습니다.
+
+컬렉션은 둘 이상 fetch join이 불가능하여 발생하는 오류였습니다.
+
+현재 Article-ArticleHashtag-Hashtag
+
+Article-ArticleImg
+
+이런 형태의 연관관계가 형성중이고 정보를 한 번에 가져오려고 하니 문제가 발생합니다.
+
+### solution:
+
+1. 배치사이즈 이용 - 쿼리 4번(조인테이블 총 4개),
+2. 패치조인 사용 및 img 따로 객체 그래프 조회 - 쿼리 2번
 3. 패치조인 사용 및 ArticleImg를 엔티티로 관리하지 않는다
 
 ### result : 3번째 방법 채택
-ArticleImg를 따로 엔티티로 처리하지 않고 Article의 content에 img태그 형태로 보관 & amazon S3에 이미지 파일을 보관하였습니다.
-이를 통해 article 조회 쿼리를 1회로 단축했습니다.
-<hr>
 
-### problem 2: JWT기반 인증으로 초기화면에서 Thymeleaf sec:authorize 속성 사용 불가
-<hr>
-formLogin 기반으로 구현을 하다 JWT를 적용하게 되었는데, 
-세션기반 인증이 아닌 JWT기반 인증이다보니 초기화면에서 활용했던 코드를 그대로 사용할 수 없었습니다.
+ArticleImg를 따로 엔티티로 처리하지 않고 Article의 content에 img태그 형태로 보관 & amazon S3에 이미지 파일을 보관하였습니다. 이를 통해 article 조회 쿼리를 1회로 단축했습니다.
+
+---
+<br>
+
+## problem 3: JWT기반 인증으로 초기화면에서 Thymeleaf sec:authorize 속성 사용 불가
+
+---
+
+formLogin 기반으로 구현을 하다 JWT를 적용하게 되었는데, 세션기반 인증이 아닌 JWT기반 인증이다보니 초기화면에서 활용했던 코드를 그대로 사용할 수 없었습니다.
 
 ```
   <th:block sec:authorize="isAnonymous()">
@@ -192,25 +239,32 @@ formLogin 기반으로 구현을 하다 JWT를 적용하게 되었는데,
                 <a class="nav-link" id="signup" th:href="@{/signup}">회원가입</a>
               </li>
             </th:block>
+
 ```
+
 특히 문제가 된 부분은 관리자 메뉴입니다.
+
 ```
 <th:block sec:authorize="hasAnyAuthority('ADMIN')">
               <li class="nav-item">
                 <a class="nav-link" th:href="@{/signup}">관리자</a>
               </li>
             </th:block>
+
 ```
+
 ### solution:
-1. Spring security의 LoginSuccessHandler에서 accessToken을 클라이언트에 보낼때 admin권한도 확인한다.
-2. admin권한이 있는 경우 이를 클라이언트측에서 알 수 있도록 정보를 포함시킨다.
-3. 처음에는 response를 Redirect 하면서 쿼리 파라미터에 값을 넣어주려고 했으나, 쿼리 파라미터에 token과 admin을 동시에 넣었더니 클라이언트에서 값을 읽지 못하는 문제가 발생했다.
-4. 따라서 response Header에 하나씩 값을 추가하여 해결하였다.
+
+1. Spring security의 LoginSuccessHandler에서 accessToken을 클라이언트에 보낼때 admin권한도 확인
+2. admin권한이 있는 경우 이를 클라이언트측에서 알 수 있도록 정보를 포함.
+3. 처음에는 response를 Redirect 하면서 쿼리 파라미터에 값을 넣어주려고 했으나, 쿼리 파라미터에 token과 admin을 동시에 넣었더니 클라이언트에서 값을 읽지 못하는 문제가 발생했습니다.
+4. 따라서 response Header에 하나씩 값을 추가하여 해결하였습니다
 
 ### result: response Header를 이용
+
 1. accessToken이 있는 경우 로그인 된 사용자라고 간주. localstorage에 token이 있는 경우 [로그아웃] 버튼 출력
-2. ``ROLE_ADMIN``권한이 있는 경우 admin="ture"를 헤더에 넣어서 response 및 localstorage에 보관
-3. localstorage에 ``admin``이 존재하면 [관리자]버튼 출력
-3. SecurityConfig에서 requestMatchers를 통해 권한 확인 하므로 혹시나 관리자가 아닌 사람이 접근해도 문제 없음. 
+2. `ROLE_ADMIN`권한이 있는 경우 admin="ture"를 헤더에 넣어서 response 및 localstorage에 보관
+3. localstorage에 `admin`이 존재하면 [관리자]버튼 출력
+4. SecurityConfig에서 requestMatchers를 통해 권한 확인 하므로 혹시나 관리자가 아닌 사람이 접근해도 문제가 없습니다
 
 
