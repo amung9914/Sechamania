@@ -45,7 +45,10 @@
 ![image](https://github.com/amung9914/Sechamania/assets/137124338/4e535764-f9c2-45ee-9623-865ae2e00883)
 
 - JWT토큰을 기반으로 자동 로그인 처리
-- 등록된 사용자 주소를 기반으로 현재 날씨 호출
+- 등록된 사용자 주소를 기반으로 기상청 단기예보 조회서비스를 이용하여 날씨 호출
+
+![image](https://github.com/amung9914/Sechamania/assets/137124338/d16a2e46-f783-452a-91af-57dfae9efad5)
+- 현재 날씨 및 10시간 후 날씨 호출 및 분석
 - 날씨에 따라 날씨 이미지 변경
 - 날씨와 기온에 따라 세차 제안 코멘트 변경
 
