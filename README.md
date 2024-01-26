@@ -64,7 +64,7 @@
 ![image](https://github.com/amung9914/Sechamania/assets/137124338/98a58d2d-91ce-4c8c-8720-d098229f0c29)
 ![image](https://github.com/amung9914/Sechamania/assets/137124338/ec4a5826-132b-4680-bbec-c05a66408bb6)
 - 이메일을 입력 시 중복된 이메일인지 검증 여부 호출
-- 비밀번호는 회원가입 시 BCrypt를 통한 암호화 후 저장장
+- 비밀번호는 회원가입 시 BCrypt를 통한 암호화 후 저장
 - 닉네임 입력 시 중복된 닉네임인지 검증 여부 호출
 - 다음 우편번호 API를 이용하여 주소 검색 및 카카오 Map api를 통해 위도,경도 호출
 ![image](https://github.com/amung9914/Sechamania/assets/137124338/67021713-7189-414d-a41c-853e82096558)
