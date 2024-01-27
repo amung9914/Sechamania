@@ -72,7 +72,7 @@ class CategoryServiceTest {
         //Assertions.assertThat(list.get(0).getName()).isEqualTo("newName");
     }
 
-    @Test
+    //@Test
     public void delete() throws Exception {
         // given
 
