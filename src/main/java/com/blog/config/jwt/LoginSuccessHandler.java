@@ -31,7 +31,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
-    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(3);
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
 
 
@@ -47,7 +47,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
             tokenProvider.sendIsAdmin(response);
         }
         String refreshToken = tokenProvider.generateToken(member,REFRESH_TOKEN_DURATION);
-        saveRefreshToken(member.getId(), refreshToken);
+        saveRefreshToken(member.getId(), accessToken, refreshToken);
         addRefreshTokenToCookie(request,response,refreshToken);
 
         log.info("로그인에 성공하였습니다. 이메일 : {}", email);
@@ -68,10 +68,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     /**
      * 생성된 리프레시 토큰을 DB에 저장
      */
-    @Transactional
-    public void saveRefreshToken(Long memberId, String newRefreshToken) {
-        refreshTokenRepository.findByMemberId(memberId)
+    public void saveRefreshToken(long memberId,String accessToken, String newRefreshToken) {
+        RefreshToken refreshToken = refreshTokenRepository.findByAccessToken(accessToken)
                 .map(entity -> entity.update(newRefreshToken))
-                .orElse(new RefreshToken(memberId, newRefreshToken));
+                .orElse(new RefreshToken(memberId,newRefreshToken, accessToken));
+        refreshTokenRepository.save(refreshToken);
     }
 }

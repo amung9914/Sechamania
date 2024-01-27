@@ -24,10 +24,7 @@ public class TokenProvider {
 
     private final JwtProperties jwtProperties;
     private final MemberRepository memberRepository;
-
     private final static String HEADER_AUTHORIZATION = "token";
-
-
 
     public String generateToken(Member member, Duration expiredAt){
         Date now = new Date();

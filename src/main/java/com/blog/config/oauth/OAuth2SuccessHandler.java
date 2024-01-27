@@ -44,13 +44,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String s = (String) oAuth2User.getAttributes().get("email");
         Member member = memberRepository.findByEmail(s)
                 .orElseThrow(()-> new IllegalArgumentException("member를 찾을 수 없습니다."));
-
-        // 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
-        String refreshToken = tokenProvider.generateToken(member,REFRESH_TOKEN_DURATION);
-        saveRefreshToken(member.getId(),refreshToken);
-        addRefreshTokenToCookie(request,response,refreshToken);
         // 액세스 토큰 생성 -> 쿼리 파라미터에 액세스 토큰 추가
         String accessToken = tokenProvider.generateToken(member, ACCESS_TOKEN_DURATION);
+        // 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
+        String refreshToken = tokenProvider.generateToken(member,REFRESH_TOKEN_DURATION);
+        saveRefreshToken(member.getId(),accessToken,refreshToken);
+        addRefreshTokenToCookie(request,response,refreshToken);
         String targetUrl = getTargetUrl(accessToken,member);
         log.info("로그인에 성공하였습니다. 이메일 : {}", member.getEmail());
         log.info("로그인에 성공하였습니다. AccessToken : {}", accessToken);
@@ -64,11 +63,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     /**
      * 생성된 리프레시 토큰을 DB에 저장
      */
-    @Transactional
-    public void saveRefreshToken(Long userId,String newRefreshToken){
-        refreshTokenRepository.findByMemberId(userId)
+    public void saveRefreshToken(long memberId,String accessToken,String newRefreshToken){
+        RefreshToken refreshToken = refreshTokenRepository.findByAccessToken(accessToken)
                 .map(entity -> entity.update(newRefreshToken))
-                .orElse(new RefreshToken(userId, newRefreshToken));
+                .orElse(new RefreshToken(memberId,newRefreshToken, accessToken));
+        refreshTokenRepository.save(refreshToken);
     }
 
     /**

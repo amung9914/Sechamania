@@ -1,8 +1,13 @@
 spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/blog
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
   mail:
     host: smtp.gmail.com
     port: 587
-    username: gtd8983@gmail.com
+    username: //
     password: //
     properties:
       mail:
@@ -29,6 +34,11 @@ spring:
       hibernate:
         format_sql: true
         # show_sql: true
+  data:
+    redis:
+      port: 6379
+      host: //
+
 
 logging:
   level:

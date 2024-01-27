@@ -111,6 +111,11 @@ public class MemberService {
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 email입니다"));
     }
 
+    public Member findById(long memberId){
+        return memberRepository.findById(memberId)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 member식별자입니다"));
+    }
+
     @Transactional
     public void joinForOauth(OauthSignupRequest request, String email,MultipartFile file) {
 

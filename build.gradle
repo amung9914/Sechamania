@@ -39,6 +39,7 @@ dependencies {
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'com.mysql:mysql-connector-j'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 // 스프링 부트 3.0 이상
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

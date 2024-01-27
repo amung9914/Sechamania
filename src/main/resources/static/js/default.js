@@ -272,7 +272,7 @@ function httpRequestWtihTokenAndResponse(method, url, body, success, fail) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    refreshToken: getCookie('refresh_token'),
+                    accessToken: localStorage.getItem('access_token'),
                 }),
             })
                 .then(res => {
