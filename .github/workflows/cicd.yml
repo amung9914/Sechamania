@@ -31,6 +31,7 @@ jobs:
           utcOffset: "+09:00"
 
       - name: Beanstalk Deploy
+        run: eb deploy --no-verify-ssl --no-wait
         uses: einaregilsson/beanstalk-deploy@v20
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
