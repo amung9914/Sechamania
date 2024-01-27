@@ -30,7 +30,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofMinutes(3);
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(3);
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
 
