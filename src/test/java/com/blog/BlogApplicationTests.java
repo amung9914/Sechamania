@@ -13,6 +13,7 @@ class BlogApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// redis 과연 될까
 	}
 
 }
