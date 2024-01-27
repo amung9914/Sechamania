@@ -36,7 +36,7 @@ jobs:
           env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          with:
+        with:
             application_name: library
             environment_name: library-env
             version_label: github-action-${{steps.current-time.outputs.formattedTime}}
