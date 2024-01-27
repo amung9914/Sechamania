@@ -31,14 +31,14 @@ jobs:
           utcOffset: "+09:00"
 
       - name: Beanstalk Deploy
-        run: |
-          eb deploy --no-verify-ssl --no-wait
-        env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            application_name: library
-            environment_name: library-env
-            version_label: github-action-${{steps.current-time.outputs.formattedTime}}
-            region: ap-northeast-2
-            deployment_package: ./build/libs/blog-0.0.1-SNAPSHOT.jar
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: library
+          environment_name: library-env
+          version_label: github-action-${{steps.current-time.outputs.formattedTime}}
+          region: ap-northeast-2
+          deployment_package: ./build/libs/blog-0.0.1-SNAPSHOT.jar
+          wait_for_environment_recovery: 180
 
