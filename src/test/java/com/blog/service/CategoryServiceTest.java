@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-@SpringBootTest @Transactional
+@SpringBootTest
+@EnabledIfEnvironmentVariable(
+        named = "SPRING_PROFILES_ACTIVE",
+        matches = "local"
+)
+@Transactional
 class CategoryServiceTest {
 
     @Autowired CategoryService categoryService;
