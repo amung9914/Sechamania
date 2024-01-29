@@ -5,19 +5,21 @@
 [실제 배포 사이트 바로가기](http://library-env.eba-wgbtarnw.ap-northeast-2.elasticbeanstalk.com/)
 
 ##  ✨ 프로젝트 소개
-``JPA`` ``RestApi`` ``공공데이터API`` ``CI/CD`` 를 활용하여 세차 커뮤니티 플랫폼을 개발하였습니다.<br>
-기간 : 2024.01.10 ~ 2024.01.25 총 16일 소요
+``JPA`` ``RestApi`` ``AWS ElastiCache`` ``공공데이터API`` ``CI/CD`` 를 활용하여 세차 커뮤니티 플랫폼을 개발하였습니다.<br>
+기간 : 2024.01.10 ~ 2024.01.29 총 20일 소요
 
 ## 💡ERD : 
-![image](https://github.com/amung9914/Sechamania/assets/137124338/121f046f-42c2-4ebe-901c-7730857cc8ae)
+![image](https://github.com/amung9914/Sechamania/assets/137124338/d9b96200-2ee0-4ed5-9d37-b096163f4fcf)
 
 ## 시스템 구성도
-![시스템구성도](https://github.com/amung9914/book_management/assets/137124338/e78547a8-498a-408c-8d80-2aff703a9893)
+![image](https://github.com/amung9914/Sechamania/assets/137124338/5988ce28-1d0f-42a7-9440-8833d5e58899)
+
 
 ## 🛠 Languages and Tools:
 - JDK 17
 - Spring Boot v3.2.0
 - Spring Data JPA v3.2.1
+- Spring Data Redis v3.2.1
 - QueryDSL v5.0.0
 - Spring Security v6.2.0
 - Spring Cloud AWS Starter v2.2.6
@@ -52,9 +54,13 @@
 - 날씨에 따라 날씨 이미지 변경
 - 날씨와 기온에 따라 세차 제안 코멘트 변경
 
-### 로그인 - 이메일 로그인 및 Oauth2를 이용한 소셜로그인 제공(구글)
+### 로그인 - 이메일 로그인 및 Oauth2를 이용한 소셜로그인 제공(구글), JWT와 RefreshToken처리(Redis활용)
 ![image](https://github.com/amung9914/Sechamania/assets/137124338/739ac93f-da0c-4570-81e8-98a300ff41ee)
-- 로그인 정보는 JWT accessToken 및 RefreshToken을 이용하여 로그인 처리
+- AbstractAuthenticationProcessingFilter를 상속받아 "/login" POST 요청을 매핑.
+- LoginSuccessHandler에서 AccessToken과 RefreshToken을 생성하여 AccessToken은 클라이언트의 localStorage에 저장,
+  RefreshToken은 accessToken을 키값으로 하여 Redis에 저장.
+- 만료된 AccessToken이 있는 경우 Redis에서 RefreshToken을 검색하고 유효성 검사를 통과하면 새로운 accessToken발급
+- 로그아웃 시 Redis 내의 RefreshToken을 제거하여 공간확보.
 
 ### 소셜 로그인 시 비회원인 경우 추가 정보 등록
 ![image](https://github.com/amung9914/Sechamania/assets/137124338/1ae8885e-8500-495e-8f99-a3fa9a397ead)
