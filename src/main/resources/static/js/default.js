@@ -289,7 +289,7 @@ function httpRequestWtihTokenAndResponse(method, url, body, success, fail) {
                 })
                 .then(result => { // 재발급이 성공하면 로컬 스토리지값을 새로운 액세스 토큰으로 교체
                     localStorage.setItem('access_token', result.accessToken);
-                    httpRequest(method, url, body, success, fail);
+                    httpRequestWtihTokenAndResponse(method, url, body, success, fail);
                 })
                 .catch(error => fail());
         } else {
