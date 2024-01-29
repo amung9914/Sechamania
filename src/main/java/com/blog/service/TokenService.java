@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class TokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
@@ -24,19 +23,20 @@ public class TokenService {
         RefreshToken foundTokenInfo = refreshTokenRepository.findByAccessToken(accessToken)
                 .orElseThrow(()-> new IllegalArgumentException("일치하는 refreshToken을 찾을 수 없습니다"));
         String refreshToken = foundTokenInfo.getRefreshToken();
-        // 리프레시 토큰 유효성 검사 진행
+        System.out.println("리프레시 토큰 유효성 검사 진행");
         if(!tokenProvider.validToken(refreshToken)){
             throw new IllegalArgumentException("이 토큰은 유효하지 않습니다.");
         }
 
-         // 유효하면 이 토큰으로 사용자id 검색
+        System.out.println("토큰으로 사용자id 검색");
         Long memberId = foundTokenInfo.getId();
         Member member = memberService.findById(memberId);
         // 새로운 액세스 토큰 생성
-        String newAccessToken = tokenProvider.generateToken(member, Duration.ofHours(2));
-
+        String newAccessToken = tokenProvider.generateToken(member, Duration.ofSeconds(10));
+        System.out.println("새로운 액세스 토큰 생성 완료");
         // 새로 발급한 accessToken으로 Redis 업데이트
         refreshTokenRepository.save(new RefreshToken(memberId,refreshToken,newAccessToken));
+        System.out.println("redis업데이트 완료");
         return newAccessToken;
     }
 
