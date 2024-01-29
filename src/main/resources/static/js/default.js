@@ -1,31 +1,33 @@
-document.addEventListener('DOMContentLoaded',function (){
+document.addEventListener('DOMContentLoaded', function () {
 
 
-    document.getElementById("modal_input").addEventListener("keydown",function (event) {
-            let key = event.key;
-            if(key==='Enter'){
-                event.preventDefault();
-                document.getElementById("model_btn").click();
-            }
+    document.getElementById("modal_input").addEventListener("keydown", function (event) {
+        let key = event.key;
+        if (key === 'Enter') {
+            event.preventDefault();
+            document.getElementById("model_btn").click();
+        }
     })
     /* 검색 */
-    document.getElementById("model_btn").addEventListener("click",function (){
+    document.getElementById("model_btn").addEventListener("click", function () {
         let searchText = document.getElementById("modal_input").value;
-        location.replace("/view/search/"+searchText);
+        location.replace("/view/search/" + searchText);
     })
 
 
     const logout = document.getElementById("logout");
-    if(logout){
-        logout.addEventListener('click',function(){
-            if(localStorage.getItem("access_token")!=null){
+    if (logout) {
+        logout.addEventListener('click', function () {
+            if (localStorage.getItem("access_token") != null) {
                 let body = JSON.stringify({
-                    "accessToken":localStorage.getItem("access_token")
+                    "accessToken": localStorage.getItem("access_token")
                 })
-                function success(){
+
+                function success() {
                     alert("토큰삭제완료");
                 }
-                httpRequestWtihToken("POST","/api/delete/token",body,success,null);
+
+                httpRequestWtihToken("POST", "/api/delete/token", body, success, null);
             }
             localStorage.removeItem("admin"); // 없으면 무시됨
             localStorage.removeItem("access_token"); // 없으면 무시됨
@@ -34,26 +36,26 @@ document.addEventListener('DOMContentLoaded',function (){
 
     // 메뉴 출력
     let isAdmin = localStorage.getItem("admin");
-    if(isAdmin){
+    if (isAdmin) {
         const adminBtn = document.getElementById("admin");
         adminBtn.style.display = 'inline-block';
     }
     let isLogin = localStorage.getItem("access_token");
-    if(isLogin){
+    if (isLogin) {
         const afterLoginElements = document.querySelectorAll(".afterLogin");
-        afterLoginElements.forEach(function(element){
+        afterLoginElements.forEach(function (element) {
             element.style.display = 'inline-block';
         });
         const beforeLoginElements = document.querySelectorAll(".beforeLogin");
-        beforeLoginElements.forEach(function(element){
+        beforeLoginElements.forEach(function (element) {
             element.style.display = 'none';
         });
     }
 
 });
 
-// HTTP GET 요청을 보내는 함수
-function httpRequestGet(url,success,fail) {
+// HTTP GET 요청을 보내는 함수 + Token
+function httpRequestGet(url, success, fail) {
     fetch(url, {
         method: "GET",
         headers: { // 로컬 스토리지에서 액세스 토큰 값을 가져와 헤더에 추가
@@ -63,6 +65,28 @@ function httpRequestGet(url,success,fail) {
     }).then(response => {
         if (response.status === 200 || response.status === 201) {
             return response.json();
+        }
+        if (response.status === 401) {
+            fetch('/api/token', {
+                method: 'POST',
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    accessToken: localStorage.getItem('access_token'),
+                }),
+            })
+                .then(res => {
+                    if (res.ok) {
+                        return res.json();
+                    }
+                })
+                .then(result => { // 재발급이 성공하면 로컬 스토리지값을 새로운 액세스 토큰으로 교체
+                    localStorage.setItem('access_token', result.accessToken);
+                    httpRequestGet(url, success, fail);
+                })
+                .catch(error => fail());
         } else {
             fail();
         }
@@ -74,17 +98,17 @@ function httpRequestGet(url,success,fail) {
 }
 
 // HTTP요청을 보내는 함수
-function httpRequest(method,url,body,success,fail){
+function httpRequest(method, url, body, success, fail) {
     fetch(url, {
         method: method,
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         },
         body: body,
-    }).then(response =>{
-        if(response.status ===200 || response.status ===201){
+    }).then(response => {
+        if (response.status === 200 || response.status === 201) {
             return success();
-        }else{
+        } else {
             fail();
         }
 
@@ -94,11 +118,11 @@ function httpRequest(method,url,body,success,fail){
 /**
  * HTTP요청을 보내는 함수 && response 조작
  */
-function httpRequestWithResponse(method,url,body,success,fail) {
+function httpRequestWithResponse(method, url, body, success, fail) {
     fetch(url, {
         method: method,
         headers: {
-            'Content-Type':'application/json'
+            'Content-Type': 'application/json'
         },
         body: body,
     }).then(response => {
@@ -115,14 +139,14 @@ function httpRequestWithResponse(method,url,body,success,fail) {
 }
 
 // HTTP요청을 보내는 함수(FormData)
-function httpRequestForFormData(method,url,body,success,fail){
+function httpRequestForFormData(method, url, body, success, fail) {
     fetch(url, {
         method: method,
         body: body,
-    }).then(response =>{
-        if(response.status ===200 || response.status ===201){
+    }).then(response => {
+        if (response.status === 200 || response.status === 201) {
             return success();
-        }else{
+        } else {
             fail();
         }
 
@@ -143,9 +167,7 @@ function httpRequestWtihToken(method, url, body, success, fail) {
         if (response.status === 200 || response.status === 201) {
             return success();
         }
-        const refresh_token = getCookie('refresh_token');
-        if (response.status === 401 && refresh_token) {
-
+        if (response.status === 401) {
             fetch('/api/token', {
                 method: 'POST',
                 headers: {
@@ -153,7 +175,7 @@ function httpRequestWtihToken(method, url, body, success, fail) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    refreshToken: getCookie('refresh_token'),
+                    accessToken: localStorage.getItem('access_token'),
                 }),
             })
                 .then(res => {
@@ -163,7 +185,7 @@ function httpRequestWtihToken(method, url, body, success, fail) {
                 })
                 .then(result => { // 재발급이 성공하면 로컬 스토리지값을 새로운 액세스 토큰으로 교체
                     localStorage.setItem('access_token', result.accessToken);
-                    httpRequest(method, url, body, success, fail);
+                    httpRequestWtihTokenAndResponse(method, url, body, success, fail);
                 })
                 .catch(error => fail());
         } else {
@@ -185,9 +207,7 @@ function httpRequestForFormDataWtihToken(method, url, body, success, fail) {
         if (response.status === 200 || response.status === 201) {
             return success();
         }
-        const refresh_token = getCookie('refresh_token');
-        if (response.status === 401 && refresh_token) {
-
+        if (response.status === 401) {
             fetch('/api/token', {
                 method: 'POST',
                 headers: {
@@ -195,7 +215,7 @@ function httpRequestForFormDataWtihToken(method, url, body, success, fail) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    refreshToken: getCookie('refresh_token'),
+                    accessToken: localStorage.getItem('access_token'),
                 }),
             })
                 .then(res => {
@@ -205,7 +225,7 @@ function httpRequestForFormDataWtihToken(method, url, body, success, fail) {
                 })
                 .then(result => { // 재발급이 성공하면 로컬 스토리지값을 새로운 액세스 토큰으로 교체
                     localStorage.setItem('access_token', result.accessToken);
-                    httpRequest(method, url, body, success, fail);
+                    httpRequestWtihTokenAndResponse(method, url, body, success, fail);
                 })
                 .catch(error => fail());
         } else {
@@ -225,9 +245,7 @@ function httpRequestForFormDataWithTokenAndResponse(method, url, body, success, 
         if (response.status === 200 || response.status === 201) {
             return response.json();
         }
-        const refresh_token = getCookie('refresh_token');
-        if (response.status === 401 && refresh_token) {
-
+        if (response.status === 401) {
             fetch('/api/token', {
                 method: 'POST',
                 headers: {
@@ -235,7 +253,7 @@ function httpRequestForFormDataWithTokenAndResponse(method, url, body, success, 
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    refreshToken: getCookie('refresh_token'),
+                    accessToken: localStorage.getItem('access_token'),
                 }),
             })
                 .then(res => {
@@ -245,7 +263,7 @@ function httpRequestForFormDataWithTokenAndResponse(method, url, body, success, 
                 })
                 .then(result => { // 재발급이 성공하면 로컬 스토리지값을 새로운 액세스 토큰으로 교체
                     localStorage.setItem('access_token', result.accessToken);
-                    httpRequest(method, url, body, success, fail);
+                    httpRequestWtihTokenAndResponse(method, url, body, success, fail);
                 })
                 .catch(error => fail());
         } else {
@@ -304,14 +322,14 @@ function httpRequestWtihTokenAndResponse(method, url, body, success, fail) {
 
 
 //쿠키를 가져오는 함수
-function getCookie(key){
+function getCookie(key) {
     var result = null;
     var cookie = document.cookie.split(';');
     // some  함수로 배열의 각 요소(쿠키)에 대해 함수를 실행한다.
-    cookie.some(function (item){
-        item = item.replace(' ','');
+    cookie.some(function (item) {
+        item = item.replace(' ', '');
         var dic = item.split("="); // key와 value 분리
-        if(key === dic[0]){
+        if (key === dic[0]) {
             result = dic[1];
             return true;
         }
