@@ -30,7 +30,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofMinutes(3);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(10);
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(3);
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
 
@@ -48,7 +48,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         }
         String refreshToken = tokenProvider.generateToken(member,REFRESH_TOKEN_DURATION);
         saveRefreshToken(member.getId(), accessToken, refreshToken);
-        addRefreshTokenToCookie(request,response,refreshToken);
+        //addRefreshTokenToCookie(request,response,refreshToken);
 
         log.info("로그인에 성공하였습니다. 이메일 : {}", email);
         log.info("로그인에 성공하였습니다. AccessToken : {}", accessToken);

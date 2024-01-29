@@ -22,4 +22,11 @@ public class TokenApiController {
                 .body(new CreateAccessTokenDto(newAccessToken));
     }
 
+    @PostMapping("/api/delete/token")
+    public HttpStatus deleteRefreshToken
+            (@RequestBody CreateAccessTokenDto request){
+        tokenService.deleteRefreshToken(request.getAccessToken());
+        return HttpStatus.OK;
+    }
+
 }

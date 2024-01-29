@@ -18,6 +18,15 @@ document.addEventListener('DOMContentLoaded',function (){
     const logout = document.getElementById("logout");
     if(logout){
         logout.addEventListener('click',function(){
+            if(localStorage.getItem("access_token")!=null){
+                let body = JSON.stringify({
+                    "accessToken":localStorage.getItem("access_token")
+                })
+                function success(){
+                    alert("토큰삭제완료");
+                }
+                httpRequestWtihToken("POST","/api/delete/token",body,success,null);
+            }
             localStorage.removeItem("admin"); // 없으면 무시됨
             localStorage.removeItem("access_token"); // 없으면 무시됨
         })
@@ -262,9 +271,7 @@ function httpRequestWtihTokenAndResponse(method, url, body, success, fail) {
         if (response.status === 200 || response.status === 201) {
             return response.json();
         }
-        const refresh_token = getCookie('refresh_token');
-        if (response.status === 401 && refresh_token) {
-
+        if (response.status === 401) {
             fetch('/api/token', {
                 method: 'POST',
                 headers: {
