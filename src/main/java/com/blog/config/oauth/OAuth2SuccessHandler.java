@@ -28,9 +28,8 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
-    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
+    public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(3);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2);
     public static final String REDIRECT_PATH = "/signup/oauth2";
 
     private final TokenProvider tokenProvider;
@@ -49,7 +48,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 리프레시 토큰 생성 -> 저장 -> 쿠키에 저장
         String refreshToken = tokenProvider.generateToken(member,REFRESH_TOKEN_DURATION);
         saveRefreshToken(member.getId(),accessToken,refreshToken);
-        addRefreshTokenToCookie(request,response,refreshToken);
         String targetUrl = getTargetUrl(accessToken,member);
         log.info("로그인에 성공하였습니다. 이메일 : {}", member.getEmail());
         log.info("로그인에 성공하였습니다. AccessToken : {}", accessToken);
@@ -61,23 +59,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     /**
-     * 생성된 리프레시 토큰을 DB에 저장
+     * 생성된 리프레시 토큰을 REDIS에 저장
      */
     public void saveRefreshToken(long memberId,String accessToken,String newRefreshToken){
         RefreshToken refreshToken = refreshTokenRepository.findByAccessToken(accessToken)
                 .map(entity -> entity.update(newRefreshToken))
                 .orElse(new RefreshToken(memberId,newRefreshToken, accessToken));
         refreshTokenRepository.save(refreshToken);
-    }
-
-    /**
-     * 생성된 리프레시 토큰을 쿠키에 저장
-     */
-    private void addRefreshTokenToCookie(HttpServletRequest request, HttpServletResponse response,
-                                         String refreshToken){
-        int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
-        CookieUtil.deleteCookie(request,response,REFRESH_TOKEN_COOKIE_NAME);
-        CookieUtil.addCookie(response,REFRESH_TOKEN_COOKIE_NAME,refreshToken,cookieMaxAge);
     }
 
     /**
@@ -107,7 +95,5 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
     }
-
-
 
 }

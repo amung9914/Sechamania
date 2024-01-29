@@ -30,10 +30,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
-    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofSeconds(10);
+    public static final Duration ACCESS_TOKEN_DURATION = Duration.ofHours(2);
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(3);
-    public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
-
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -56,17 +54,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     }
 
     /**
-     * 생성된 리프레시 토큰을 쿠키에 저장
-     */
-    private void addRefreshTokenToCookie(HttpServletRequest request, HttpServletResponse response, String refreshToken) {
-        int cookieMaxAge = (int) REFRESH_TOKEN_DURATION.toSeconds();
-        CookieUtil.deleteCookie(request,response,REFRESH_TOKEN_COOKIE_NAME);
-        CookieUtil.addCookie(response,REFRESH_TOKEN_COOKIE_NAME,refreshToken,cookieMaxAge);
-
-    }
-
-    /**
-     * 생성된 리프레시 토큰을 DB에 저장
+     * 생성된 리프레시 토큰을 REDIS에 저장
      */
     public void saveRefreshToken(long memberId,String accessToken, String newRefreshToken) {
         RefreshToken refreshToken = refreshTokenRepository.findByAccessToken(accessToken)

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+// REDIS Repository
 @Repository
 public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Long> {
 

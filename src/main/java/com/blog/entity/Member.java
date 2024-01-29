@@ -24,15 +24,16 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
     private String password;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 20)
     private String nickname;
     @Embedded
     private Address address;
     @Enumerated(EnumType.STRING)
+    @Column(length = 8)
     private MemberStatus status;
     private String profileImg;
 

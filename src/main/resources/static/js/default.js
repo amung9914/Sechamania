@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-
-
     document.getElementById("modal_input").addEventListener("keydown", function (event) {
         let key = event.key;
         if (key === 'Enter') {
@@ -15,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
 
+    /* 로그아웃 시 localStorage 정리 및 Redis에 있는 RefreshToken삭제 */
     const logout = document.getElementById("logout");
     if (logout) {
         logout.addEventListener('click', function () {
@@ -22,12 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let body = JSON.stringify({
                     "accessToken": localStorage.getItem("access_token")
                 })
-
-                function success() {
-                    alert("토큰삭제완료");
-                }
-
-                httpRequestWtihToken("POST", "/api/delete/token", body, success, null);
+                httpRequestWtihToken("POST", "/api/delete/token", body, null, null);
             }
             localStorage.removeItem("admin"); // 없으면 무시됨
             localStorage.removeItem("access_token"); // 없으면 무시됨
@@ -66,7 +60,8 @@ function httpRequestGet(url, success, fail) {
         if (response.status === 200 || response.status === 201) {
             return response.json();
         }
-        if (response.status === 401) {
+        let accessToken = localStorage.getItem('access_token');
+        if (response.status === 401 && accessToken) {
             fetch('/api/token', {
                 method: 'POST',
                 headers: {
@@ -74,7 +69,7 @@ function httpRequestGet(url, success, fail) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    accessToken: localStorage.getItem('access_token'),
+                    "accessToken": localStorage.getItem('access_token'),
                 }),
             })
                 .then(res => {
@@ -167,7 +162,8 @@ function httpRequestWtihToken(method, url, body, success, fail) {
         if (response.status === 200 || response.status === 201) {
             return success();
         }
-        if (response.status === 401) {
+        let accessToken = localStorage.getItem('access_token');
+        if (response.status === 401 && accessToken) {
             fetch('/api/token', {
                 method: 'POST',
                 headers: {
@@ -175,7 +171,7 @@ function httpRequestWtihToken(method, url, body, success, fail) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    accessToken: localStorage.getItem('access_token'),
+                    "accessToken": localStorage.getItem('access_token'),
                 }),
             })
                 .then(res => {
@@ -207,7 +203,8 @@ function httpRequestForFormDataWtihToken(method, url, body, success, fail) {
         if (response.status === 200 || response.status === 201) {
             return success();
         }
-        if (response.status === 401) {
+        let accessToken = localStorage.getItem('access_token');
+        if (response.status === 401 && accessToken) {
             fetch('/api/token', {
                 method: 'POST',
                 headers: {
@@ -215,7 +212,7 @@ function httpRequestForFormDataWtihToken(method, url, body, success, fail) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    accessToken: localStorage.getItem('access_token'),
+                    "accessToken": localStorage.getItem('access_token'),
                 }),
             })
                 .then(res => {
@@ -245,7 +242,8 @@ function httpRequestForFormDataWithTokenAndResponse(method, url, body, success, 
         if (response.status === 200 || response.status === 201) {
             return response.json();
         }
-        if (response.status === 401) {
+        let accessToken = localStorage.getItem('access_token');
+        if (response.status === 401 && accessToken) {
             fetch('/api/token', {
                 method: 'POST',
                 headers: {
@@ -253,7 +251,7 @@ function httpRequestForFormDataWithTokenAndResponse(method, url, body, success, 
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    accessToken: localStorage.getItem('access_token'),
+                    "accessToken": localStorage.getItem('access_token'),
                 }),
             })
                 .then(res => {
@@ -289,7 +287,8 @@ function httpRequestWtihTokenAndResponse(method, url, body, success, fail) {
         if (response.status === 200 || response.status === 201) {
             return response.json();
         }
-        if (response.status === 401) {
+        let accessToken = localStorage.getItem('access_token');
+        if (response.status === 401 && accessToken) {
             fetch('/api/token', {
                 method: 'POST',
                 headers: {
@@ -297,7 +296,7 @@ function httpRequestWtihTokenAndResponse(method, url, body, success, fail) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    accessToken: localStorage.getItem('access_token'),
+                    "accessToken": localStorage.getItem('access_token'),
                 }),
             })
                 .then(res => {
@@ -318,21 +317,4 @@ function httpRequestWtihTokenAndResponse(method, url, body, success, fail) {
             success(data);
         }
     });
-}
-
-
-//쿠키를 가져오는 함수
-function getCookie(key) {
-    var result = null;
-    var cookie = document.cookie.split(';');
-    // some  함수로 배열의 각 요소(쿠키)에 대해 함수를 실행한다.
-    cookie.some(function (item) {
-        item = item.replace(' ', '');
-        var dic = item.split("="); // key와 value 분리
-        if (key === dic[0]) {
-            result = dic[1];
-            return true;
-        }
-    });
-    return result;
 }
