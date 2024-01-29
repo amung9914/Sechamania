@@ -7,4 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class CreateAccessTokenDto {
     private String accessToken;
+
+    public CreateAccessTokenDto() {
+    }
 }
