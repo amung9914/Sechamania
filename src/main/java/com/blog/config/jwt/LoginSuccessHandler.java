@@ -46,7 +46,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         }
         String refreshToken = tokenProvider.generateToken(member,REFRESH_TOKEN_DURATION);
         saveRefreshToken(member.getId(), accessToken, refreshToken);
-        //addRefreshTokenToCookie(request,response,refreshToken);
 
         log.info("로그인에 성공하였습니다. 이메일 : {}", email);
         log.info("로그인에 성공하였습니다. AccessToken : {}", accessToken);

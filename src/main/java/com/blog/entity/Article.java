@@ -17,10 +17,10 @@ public class Article extends BaseEntity{
     @Column(name = "article_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     @Lob
     private String content;
 
