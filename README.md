@@ -9,7 +9,7 @@
 기간 : 2024.01.10 ~ 2024.01.29 총 20일 소요
 
 ## 💡ERD : 
-![image](https://github.com/amung9914/Sechamania/assets/137124338/eff53ee0-f459-48e0-a810-039ae6bcb9ea)
+![image](https://github.com/amung9914/Sechamania/assets/137124338/54aa092b-026d-4364-89f6-d2b0c82ab8cb)
 
 
 ## 시스템 구성도
