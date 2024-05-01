@@ -12,6 +12,7 @@ import com.blog.repository.RefreshTokenRepository;
 import com.blog.service.MemberService;
 import com.blog.service.UserDetailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.cj.protocol.a.authentication.Sha256PasswordPlugin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +25,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -94,14 +97,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
+    // PBKDF2 암호화 적용
+    public Pbkdf2PasswordEncoder pbkdf2PasswordEncoder(){
+        return new Pbkdf2PasswordEncoder("secret9914",50,10000,Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
+        // 비밀키(secret), salt의 길이(saltLength), 반복 횟수(iterations), 그리고 SecretKeyFactoryAlgorithm
     }
 
     @Bean
     public AuthenticationManager authenticationManager(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(bCryptPasswordEncoder());
+        provider.setPasswordEncoder(pbkdf2PasswordEncoder());
         provider.setUserDetailsService(userDetailService);
         return new ProviderManager(provider);
     }

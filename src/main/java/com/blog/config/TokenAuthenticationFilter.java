@@ -47,8 +47,4 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 }

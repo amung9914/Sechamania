@@ -11,6 +11,7 @@ import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +29,24 @@ class MemberServiceTest {
     @Autowired MemberService memberService;
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    Pbkdf2PasswordEncoder encoder;
     @PersistenceContext
     EntityManager em;
 
+
+    @Test
+    public void encoderTest() throws Exception {
+        // given
+        String name = "rlatjdud1!";
+
+        // when
+        String encode1 = encoder.encode(name);
+        // then
+        System.out.println(encoder.matches("rlatjdud1!",encode1));
+    }
+    /*
     @Test
     public void join() throws Exception {
         // given
@@ -47,6 +63,8 @@ class MemberServiceTest {
         Assertions.assertThat(findMember.get().getAddress().getFullAddress()).isEqualTo("addr");
 
     }
+
+     */
 
     //@Test
     /*public void joinForCompany() throws Exception {

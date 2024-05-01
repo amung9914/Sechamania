@@ -11,6 +11,8 @@ import com.blog.repository.MemberRepository;
 import com.blog.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +26,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AuthorityRepository authorityRepository;
-    private final BCryptPasswordEncoder encoder;
+    private final Pbkdf2PasswordEncoder encoder;
 
     private final S3Uploader s3Uploader;
 
