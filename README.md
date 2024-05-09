@@ -1,14 +1,26 @@
 # 개인프로젝트 - 세차 커뮤니티 플랫폼 
 
+목차
+
+[1.프로젝트소개](#프로젝트-소개)
+
+[2.구현 기능](#구현-기능)
+
+[3.트러블 슈팅](#트러블슈팅)
+
+[4.기능개선](#기능-개선)
+
+
+
 ### 🔗Deploy site
 
 [실제 배포 사이트 바로가기](http://library-env.eba-wgbtarnw.ap-northeast-2.elasticbeanstalk.com/)
 
-##  ✨ 프로젝트 소개
+# 프로젝트 소개
 ``JPA`` ``RestApi`` ``AWS ElastiCache`` ``공공데이터API`` ``CI/CD`` 를 활용하여 세차 커뮤니티 플랫폼을 개발하였습니다.<br>
 기간 : 2024.01.10 ~ 2024.01.29 총 20일 소요
 
-## 💡ERD : 
+## 💡ERD
 ![image](https://github.com/amung9914/Sechamania/assets/137124338/54aa092b-026d-4364-89f6-d2b0c82ab8cb)
 
 
@@ -41,7 +53,7 @@
 - Daum PostCode Service
 - Summernote Editor
 
-## 📌 구현 기능 :
+# 구현 기능
 
 ### 초기화면 - 현재 날씨 확인 및 세차 제안 코멘트 제공
 
@@ -162,7 +174,7 @@ Github master branch push를 하면 바로 배포될 수 있도록 CI/CD를 구�
 
 <br>
 
-## 🔥 트러블슈팅
+# 트러블슈팅
 
 ## problem 1 : Article의 해시태그가 없는 경우로 인해 N+1 문제 발생
 
@@ -230,4 +242,6 @@ Article-ArticleImg
 ArticleImg를 따로 엔티티로 처리하지 않고 Article의 content에 img태그 형태로 보관 & amazon S3에 이미지 파일을 보관하였습니다. 이를 통해 article 조회 쿼리를 1회로 단축했습니다.
 
 ---
+
+# 기능 개선
 
